@@ -1,0 +1,30 @@
+const movies = [
+  "Dune: Part Two",
+  "Poor Things",
+  "Furiosa",
+  "Saltburn",
+  "Barbie",
+  "The Iron Claw",
+  "Oppenheimer",
+  "Everything Everywhere All At Once",
+  "The Bear",
+];
+
+let current = 0;
+
+function showMovie() {
+  const card = document.getElementById("movie-card");
+  if (current < movies.length) {
+    card.textContent = movies[current];
+  } else {
+    card.textContent = "No more movies to recommend!";
+  }
+}
+
+function swipe(direction) {
+  console.log(`You swiped ${direction} on ${movies[current]}`);
+  current++;
+  showMovie();
+}
+
+showMovie();
