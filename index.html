@@ -1,106 +1,70 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhatFlix</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9fafb;
-      color: #111827;
-    }header {
-  background: #111827;
-  color: white;
-  padding: 1rem 2rem;
-  text-align: center;
-}
-
-nav {
-  background: #e5e7eb;
-  display: flex;
-  justify-content: space-around;
-  padding: 1rem;
-  position: sticky;
-  top: 0;
-}
-
-nav a {
-  text-decoration: none;
-  color: #111827;
-  font-weight: 600;
-}
-
-section {
-  padding: 2rem;
-}
-
-h2 {
-  margin-top: 0;
-}
-
-.card {
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
-
-.footer {
-  text-align: center;
-  padding: 1rem;
-  background: #f3f4f6;
-  font-size: 0.875rem;
-}
-
-  </style>
-</head><body>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
   <header>
     <h1>🍿 WhatFlix</h1>
     <p>Watch smarter. Share better. Decide faster.</p>
-  </header>  <nav>
+  </header>
+
+  <nav>
     <a href="#feed">Feed</a>
     <a href="#browse">Browse</a>
     <a href="#watchlist">Watchlist</a>
     <a href="#friends">Friends</a>
     <a href="#profile">Profile</a>
-  </nav>  <section id="feed">
-    <h2>🔥 Top Movie Picks for 2025</h2>
-    <div class="card">Mission: Impossible – The Final Reckoning – High-octane finale to the franchise</div>
-    <div class="card">Captain America: Brave New World – A bold new chapter for the Avengers</div>
-    <div class="card">Lilo & Stitch (Live-Action) – Disney magic meets modern CGI</div>
-    <div class="card">Ne Zha 2 – Mythology and animation in harmony</div>
-    <div class="card">Fear Street: Prom Queen – Slasher thrills on prom night</div>
-    <div class="card">Top Gun 3 – Maverick returns for one last flight</div>
-    <div class="card">It Was Just an Accident – Cannes-winning drama</div>
-    <div class="card">Die, My Love – A surreal, emotional rollercoaster</div>
-    <div class="card">The Little Sister – A heartfelt coming-of-age tale</div>
-    <div class="card">The Mastermind – Heist thriller with depth</div>
-  </section>  <section id="browse">
+  </nav>
+
+  <section id="feed">
+    <h2>🔥 Top Picks This Week</h2>
+    <div class="card">Succession – Recommended by 3 friends</div>
+    <div class="card">Everything Everywhere All At Once – Trending Now</div>
+    <div class="card">The Bear – “Changed my life” – @lottie</div>
+  </section>
+
+  <section id="browse">
     <h2>🎯 Browse by Vibe</h2>
     <div class="card">😄 Feel-Good</div>
     <div class="card">🧠 Thought-Provoking</div>
     <div class="card">👻 Dark & Twisty</div>
-  </section>  <section id="watchlist">
+  </section>
+
+  <section id="watchlist">
     <h2>📺 Your Watchlist</h2>
-    <div class="card">You haven’t added anything yet. Add shows to your list and keep track!</div>
-  </section>  <section id="friends">
+    <div class="card">You haven’t added anything yet.</div>
+  </section>
+
+  <section id="friends">
     <h2>👯 What Your Friends Are Watching</h2>
-    <div class="card">@seb just watched *Poor Things*</div>
-    <div class="card">@hatspopcorn rewatched *Paddington 2* — again!</div>
-  </section>  <section id="profile">
+    <div class="card">@seb just watched <em>Poor Things</em></div>
+    <div class="card">@hatspopcorn rewatched <em>Paddington 2</em></div>
+  </section>
+
+  <section id="profile">
     <h2>🧑‍🚀 Your Profile</h2>
     <div class="card">Fave Genres: Sci-fi, Comedy, A24 stuff</div>
     <div class="card">Hates: Slow burners</div>
     <div class="card">Watch streak: 4 nights in a row 🍿</div>
-  </section>  <section id="recommend">
-    <h2>❤️ Swipe Right to Watch</h2>
-    <div class="card">Captain America: Brave New World <button>👍</button> <button>👎</button></div>
-    <div class="card">Die, My Love <button>👍</button> <button>👎</button></div>
-    <div class="card">Ne Zha 2 <button>👍</button> <button>👎</button></div>
-  </section>  <div class="footer">
-    Built with 🍕 & 💬 by Seb & ChatGPT | <a href="mailto:hello@whatflix.net">Contact us</a>
+  </section>
+
+  <div class="tinder-container">
+    <h2>🎬 Swipe for Recs</h2>
+    <div id="movie-card" class="card">Loading...</div>
+    <div class="buttons">
+      <button onclick="swipe('no')">👎</button>
+      <button onclick="swipe('yes')">👍</button>
+    </div>
   </div>
-</body></html>
+
+  <div class="footer">
+    Built with 🍕 & 💬 by Seb & ChatGPT
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
