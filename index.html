@@ -1,75 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WhatFlix – Discover What to Watch</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatFlix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #0e0e0e;
+      margin: 0;
+      padding: 0;
+      background-color: #f9fafb;
+      color: #111827;
+    }
+
+    header {
+      background: #111827;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 2rem;
+      padding: 1rem 2rem;
       text-align: center;
     }
-    h1 {
-      font-size: 2.5rem;
+
+    nav {
+      background: #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    section {
+      padding: 2rem;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      padding: 1rem;
       margin-bottom: 1rem;
     }
-    p {
-      font-size: 1.2rem;
-      max-width: 600px;
+
+    .footer {
+      text-align: center;
+      padding: 1rem;
+      background: #f3f4f6;
+      font-size: 0.875rem;
     }
-    form {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 100%;
-      max-width: 400px;
-    }
-    input[type="email"] {
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-    }
-    button {
-      padding: 0.75rem;
-      font-size: 1rem;
-      background-color: #ff3c00;
+
+    button.add-btn {
+      margin-top: 0.5rem;
+      background-color: #2563eb;
       color: white;
       border: none;
-      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+      border-radius: 0.3rem;
       cursor: pointer;
-      transition: background 0.3s;
+      font-weight: 600;
     }
-    button:hover {
-      background-color: #ff5c2e;
-    }
-    footer {
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      opacity: 0.6;
+
+    button.add-btn:hover {
+      background-color: #1e40af;
     }
   </style>
 </head>
+
 <body>
-  <h1>🎬 WhatFlix</h1>
-  <p>Tired of scrolling endlessly? Get personal recommendations based on what your friends are actually watching.</p>
+  <header>
+    <h1>🍿 WhatFlix</h1>
+    <p>Watch smarter. Share better. Decide faster.</p>
+  </header>
 
-  <form action="https://formspree.io/f/xkgrdvwk" method="POST">
-    <input type="email" name="email" placeholder="Enter your email" required />
-    <button type="submit">Notify Me</button>
-  </form>
+  <nav>
+    <a href="#feed">Feed</a>
+    <a href="#browse">Browse</a>
+    <a href="#watchlist">Watchlist</a>
+    <a href="#friends">Friends</a>
+    <a href="#profile">Profile</a>
+  </nav>
 
-  <footer>© 2025 WhatFlix</footer>
+  <section id="feed">
+    <h2>🔥 Top Picks This Week</h2>
+    <div class="card">
+      Succession – Recommended by 3 friends
+      <button class="add-btn" data-title="Succession">Add to Watchlist</button>
+    </div>
+    <div class="card">
+      Everything Everywhere All At Once – Trending Now
+      <button class="add-btn" data-title="Everything Everywhere All At Once">Add to Watchlist</button>
+    </div>
+    <div class="card">
+      The Bear – “Changed my life” – @lottie
+      <button class="add-btn" data-title="The Bear">Add to Watchlist</button>
+    </div>
+  </section>
+
+  <section id="browse">
+    <h2>🎯 Browse by Vibe</h2>
+    <div class="card">😄 Feel-Good</div>
+    <div class="card">🧠 Thought-Provoking</div>
+    <div class="card">👻 Dark & Twisty</div>
+  </section>
+
+  <section id="watchlist">
+    <h2>📺 Your Watchlist</h2>
+    <div id="watchlist-cards" class="card">You haven’t added anything yet. Add shows to your list and keep track!</div>
+  </section>
+
+  <section id="friends">
+    <h2>👯 What Your Friends Are Watching</h2>
+    <div class="card">@seb just watched *Poor Things*</div>
+    <div class="card">@hatspopcorn rewatched *Paddington 2* — again!</div>
+  </section>
+
+  <section id="profile">
+    <h2>🧑‍🚀 Your Profile</h2>
+    <div class="card">Fave Genres: Sci-fi, Comedy, A24 stuff</div>
+    <div class="card">Hates: Slow burners</div>
+    <div class="card">Watch streak: 4 nights in a row 🍿</div>
+  </section>
+
+  <div class="footer">
+    Built with 🍕 & 💬 by Seb & ChatGPT | <a href="mailto:hello@whatflix.net">Contact us</a>
+  </div>
+
+  <script>
+    // Load watchlist from localStorage or initialize as empty array
+    let watchlist = JSON.parse(localStorage.getItem('whatflixWatchlist')) || [];
+
+    const watchlistContainer = document.getElementById('watchlist-cards');
+
+    function renderWatchlist() {
+      if (watchlist.length === 0) {
+        watchlistContainer.textContent = "You haven’t added anything yet. Add shows to your list and keep track!";
+        return;
+      }
+
+      watchlistContainer.innerHTML = '';
+      watchlist.forEach(show => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.textContent = show;
+        watchlistContainer.appendChild(div);
+      });
+    }
+
+    function addToWatchlist(title) {
+      if (!watchlist.includes(title)) {
+        watchlist.push(title);
+        localStorage.setItem('whatflixWatchlist', JSON.stringify(watchlist));
+        renderWatchlist();
+        alert(`Added "${title}" to your watchlist!`);
+      } else {
+        alert(`"${title}" is already in your watchlist.`);
+      }
+    }
+
+    // Attach event listeners to all add buttons
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const title = btn.getAttribute('data-title');
+        addToWatchlist(title);
+      });
+    });
+
+    renderWatchlist();
+  </script>
 </body>
+
 </html>
