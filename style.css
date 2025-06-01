@@ -1,46 +1,155 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #121212;
-  color: #eee;
+/* Reset */
+* {
   margin: 0;
-  padding: 20px;
-  text-align: center;
-}
-
-#auth-section, #app-section {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-input {
-  padding: 10px;
-  margin: 10px 0;
-  width: 100%;
+  padding: 0;
   box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-button {
-  padding: 10px 20px;
-  margin: 10px 5px;
-  cursor: pointer;
+/* Body + Background */
+body {
+  background-color: #141414;
+  color: #eee;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
 }
 
-#movie-card {
-  margin-top: 20px;
-}
-
-#poster {
-  max-width: 100%;
-  height: auto;
+/* Container */
+#auth-container, #main-app {
+  width: 100%;
+  max-width: 480px;
+  background-color: #1e1e1e;
   border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 0 15px rgba(255 255 255 / 0.05);
 }
 
+/* Headings */
+h1, h2, h3, h4 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* Buttons */
+button {
+  background-color: #e50914;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 4px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0.5rem 0.25rem;
+}
+
+button:hover {
+  background-color: #b0070e;
+}
+
+/* Inputs */
+input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  border: none;
+  background-color: #333;
+  color: #eee;
+  font-size: 1rem;
+}
+
+/* Movie Card */
+#movie-container {
+  background-color: #222;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255 0 0 / 0.3);
+}
+
+#movie-poster {
+  max-width: 100%;
+  border-radius: 6px;
+  box-shadow: 0 8px 16px rgba(0 0 0 / 0.8);
+  margin-bottom: 1rem;
+}
+
+#movie-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #e50914;
+}
+
+#movie-overview {
+  font-size: 0.9rem;
+  color: #ccc;
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Swipe buttons */
+.swipe-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.swipe-buttons button {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0;
+  background-color: #333;
+  color: #eee;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(229 9 20 / 0.7);
+  transition: background-color 0.3s ease;
+}
+
+.swipe-buttons button:hover {
+  background-color: #e50914;
+  color: #fff;
+}
+
+/* Watchlist */
 #watchlist {
-  margin-top: 20px;
-  list-style: none;
-  padding-left: 0;
+  margin-top: 2rem;
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  padding: 1rem;
 }
 
+#watchlist-items {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-left: 0.5rem;
+}
+
+#watchlist-items li {
+  border-bottom: 1px solid #333;
+  padding: 0.5rem 0;
+  font-weight: 600;
+  color: #bbb;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: #eee;
+}
+
+/* Utility */
 .hidden {
   display: none;
 }
