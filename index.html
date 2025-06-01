@@ -1,94 +1,37 @@
-<!-- index.html - with working Firebase Auth and homepage redirection --><!DOCTYPE html><html lang="en">
+<!-- index.html --><!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhatFlix</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #fff;
-      text-align: center;
-      padding: 2rem;
-    }
-    #auth-section, #home-section {
-      display: none;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px;
-      font-size: 1rem;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>WhatFlix</h1>  <!-- AUTH SECTION -->  <div id="auth-section">
-    <h2>Sign In or Sign Up</h2>
-    <input type="email" id="email" placeholder="Email" /><br />
-    <input type="password" id="password" placeholder="Password" /><br />
-    <button id="signup-btn">Sign Up</button>
-    <button id="signin-btn">Sign In</button>
-  </div>  <!-- HOME SECTION -->  <div id="home-section">
-    <h2>Welcome to WhatFlix</h2>
-    <p>You are signed in!</p>
-    <button id="signout-btn">Sign Out</button>
-    <!-- More features like swipe zone, surprise me, watchlist etc. go here -->
-  </div>  <!-- Firebase SDKs -->  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js';
-    import { getAnalytics } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js';
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js';
+  <div id="auth-container">
+    <h1>WhatFlix</h1>
+    <div id="auth-forms">
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="signInBtn">Sign In</button>
+      <button id="signUpBtn">Sign Up</button>
+    </div>
+  </div>  <div id="main-app" class="hidden">
+    <h2>Welcome to WhatFlix!</h2>
+    <button id="signOutBtn">Sign Out</button><section id="movie-swipe">
+  <h3>Swipe Zone</h3>
+  <div id="movie-container">
+    <img id="movie-poster" src="" alt="Movie Poster" />
+    <h4 id="movie-title"></h4>
+    <div class="swipe-buttons">
+      <button id="dislikeBtn">👎</button>
+      <button id="likeBtn">👍</button>
+    </div>
+  </div>
+</section>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
-      authDomain: "whatflix-a17fb.firebaseapp.com",
-      projectId: "whatflix-a17fb",
-      storageBucket: "whatflix-a17fb.appspot.com",
-      messagingSenderId: "369819362727",
-      appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
-      measurementId: "G-Z6RX0KXLKY"
-    };
+<section id="watchlist">
+  <h3>Your Watchlist</h3>
+  <ul id="watchlist-items"></ul>
+</section>
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth();
-
-    // Elements
-    const authSection = document.getElementById('auth-section');
-    const homeSection = document.getElementById('home-section');
-    const signupBtn = document.getElementById('signup-btn');
-    const signinBtn = document.getElementById('signin-btn');
-    const signoutBtn = document.getElementById('signout-btn');
-
-    // Auth handlers
-    signupBtn.addEventListener('click', () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => console.log('Signed up'))
-        .catch(err => alert(err.message));
-    });
-
-    signinBtn.addEventListener('click', () => {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => console.log('Signed in'))
-        .catch(err => alert(err.message));
-    });
-
-    signoutBtn.addEventListener('click', () => {
-      signOut(auth);
-    });
-
-    // Auth state listener
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authSection.style.display = 'none';
-        homeSection.style.display = 'block';
-      } else {
-        authSection.style.display = 'block';
-        homeSection.style.display = 'none';
-      }
-    });
-  </script></body>
+  </div>  <script type="module" src="script.js"></script></body>
 </html>
