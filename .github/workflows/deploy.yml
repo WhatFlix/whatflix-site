@@ -1,1 +1,77 @@
+Here you go — a GitHub Actions workflow that automatically builds and deploys your site to GitHub Pages every time you push to the main branch:
+
+
+---
+
+📄 .github/workflows/deploy.yml
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
+
+
+---
+
+📥 How to set it up:
+
+1. Go to your GitHub repo.
+
+
+2. In the root, create a folder: .github/workflows
+
+
+3. Inside that folder, create a new file called: deploy.yml
+
+
+4. Paste the code above into that file and commit it.
+
+
+5. Make sure:
+
+Your default branch is main
+
+GitHub Pages is set to deploy from GitHub Actions
+
+
+
+
+
+---
+
+🟢 After this:
+
+Any push to main = auto-deployment to GitHub Pages (https://whatflix.github.io/whatflix-site/) or via your custom domain (WhatFlix.net) if set up.
+
+Let me know once it’s in, and I can test it with a minor update to confirm it’s all working smoothly.
+
 
