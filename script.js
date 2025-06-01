@@ -121,3 +121,47 @@ onAuthStateChanged(auth, user => {
     loadWatchlist();
   }
 });
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const signInBtn = document.getElementById("signInBtn");
+const signUpBtn = document.getElementById("signUpBtn");
+const authMessage = document.getElementById("auth-message");
+const authContainer = document.getElementById("auth-container");
+const mainApp = document.getElementById("main-app");
+
+// Sign Up
+signUpBtn.addEventListener("click", async () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    authMessage.textContent = "✅ Sign-up successful!";
+  } catch (error) {
+    authMessage.textContent = `⚠️ Sign-up failed: ${error.message}`;
+  }
+});
+
+// Sign In
+signInBtn.addEventListener("click", async () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    authMessage.textContent = "✅ Sign-in successful!";
+  } catch (error) {
+    authMessage.textContent = `⚠️ Sign-in failed: ${error.message}`;
+  }
+});
+
+// Listen for auth state changes
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    authContainer.classList.add("hidden");
+    mainApp.classList.remove("hidden");
+  } else {
+    mainApp.classList.add("hidden");
+    authContainer.classList.remove("hidden");
+  }
+});
