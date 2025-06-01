@@ -6,6 +6,12 @@ import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
@@ -19,6 +25,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // DOM elements
 const authContainer = document.getElementById("auth-container");
@@ -47,21 +54,7 @@ signUpBtn.addEventListener("click", () => {
 });
 
 signOutBtn.addEventListener("click", () => {
-  signOut(auth)
-    .then(() => console.log("Signed out!"))
-    .catch((error) => alert("Sign Out Error: " + error.message));
-});
-
-// Auth State Listener
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    authContainer.classList.add("hidden");
-    mainApp.classList.remove("hidden");
-    loadMovies();
-  } else {
-    authContainer.classList.remove("hidden");
-    mainApp.classList.add("hidden");
-  }
+  signOut(auth);
 });
 
 // TMDB Logic
@@ -70,6 +63,7 @@ let movies = [];
 let currentIndex = 0;
 let watchlist = [];
 
+// Load movies from TMDB API
 async function loadMovies() {
   try {
     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_watch_providers=8&watch_region=GB`);
@@ -82,6 +76,7 @@ async function loadMovies() {
   }
 }
 
+// Show current movie in swipe zone
 function showMovie() {
   const titleEl = document.getElementById("movie-title");
   const posterEl = document.getElementById("movie-poster");
@@ -96,15 +91,56 @@ function showMovie() {
 
   const movie = movies[currentIndex];
   titleEl.textContent = movie.title;
-  posterEl.src = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "";
-  overviewEl.textContent = movie.overview || "No overview available.";
+  posterEl.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  overviewEl.textContent = movie.overview;
 }
 
-// Swipe Events
-document.getElementById("likeBtn").addEventListener("click", () => {
+// Update watchlist UI
+function updateWatchlist() {
+  const listEl = document.getElementById("watchlist-items");
+  listEl.innerHTML = ""; // Clear existing items
+  watchlist.forEach((movie) => {
+    const li = document.createElement("li");
+    li.textContent = movie.title;
+    listEl.appendChild(li);
+  });
+}
+
+// Save watchlist to Firestore
+async function saveWatchlist(userId, watchlist) {
+  try {
+    await setDoc(doc(db, "watchlists", userId), { movies: watchlist });
+  } catch (error) {
+    console.error("Error saving watchlist:", error);
+  }
+}
+
+// Load watchlist from Firestore
+async function loadWatchlist(userId) {
+  try {
+    const docRef = doc(db, "watchlists", userId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      watchlist = docSnap.data().movies || [];
+      updateWatchlist();
+    } else {
+      watchlist = [];
+      updateWatchlist();
+    }
+  } catch (error) {
+    console.error("Error loading watchlist:", error);
+  }
+}
+
+// Swipe button events
+document.getElementById("likeBtn").addEventListener("click", async () => {
   if (movies[currentIndex]) {
     watchlist.push(movies[currentIndex]);
     updateWatchlist();
+    if (auth.currentUser) {
+      await saveWatchlist(auth.currentUser.uid, watchlist);
+    }
   }
   currentIndex++;
   showMovie();
@@ -115,12 +151,16 @@ document.getElementById("dislikeBtn").addEventListener("click", () => {
   showMovie();
 });
 
-function updateWatchlist() {
-  const listEl = document.getElementById("watchlist-items");
-  listEl.innerHTML = ""; // Clear existing items
-  watchlist.forEach((movie) => {
-    const li = document.createElement("li");
-    li.textContent = movie.title;
-    listEl.appendChild(li);
-  });
-}
+// Auth state listener - toggles UI and loads data
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    authContainer.classList.add("hidden");
+    mainApp.classList.remove("hidden");
+    loadMovies();
+    loadWatchlist(user.uid);
+  } else {
+    authContainer.classList.remove("hidden");
+    mainApp.classList.add("hidden");
+    watchlist = [];
+  }
+});
