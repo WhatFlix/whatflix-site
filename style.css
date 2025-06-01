@@ -1,207 +1,46 @@
-/* Reset & base */
-* {
-  box-sizing: border-box;
-}
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
+  font-family: Arial, sans-serif;
   background: #121212;
   color: #eee;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  justify-content: flex-start;
-  align-items: center;
+  margin: 0;
   padding: 20px;
-}
-
-h1, h2, h3, h4 {
-  margin: 10px 0;
-  font-weight: 600;
-}
-
-.hidden {
-  display: none !important;
-}
-
-#auth-container {
-  background: #1f1f1f;
-  padding: 30px;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 360px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
   text-align: center;
 }
 
-#auth-forms input {
-  width: 100%;
-  padding: 10px 12px;
+#auth-section, #app-section {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+input {
+  padding: 10px;
   margin: 10px 0;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-}
-
-#auth-forms input:focus {
-  outline: 2px solid #ff3c78;
-  background: #2b2b2b;
-  color: #eee;
-}
-
-#auth-forms button {
-  padding: 12px 18px;
-  margin: 8px 6px 0 6px;
-  border: none;
-  border-radius: 6px;
-  background-color: #ff3c78;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#auth-forms button:hover {
-  background-color: #ff3360;
-}
-
-#auth-message {
-  color: #ff3360;
-  margin-top: 10px;
-  min-height: 20px;
-}
-
-#main-app {
   width: 100%;
-  max-width: 700px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  cursor: pointer;
+}
+
+#movie-card {
   margin-top: 20px;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #1f1f1f;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.5);
-}
-
-#signOutBtn {
-  background-color: #ff3c78;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
-}
-
-#signOutBtn:hover {
-  background-color: #ff3360;
-}
-
-#hero {
-  position: relative;
-  margin: 20px 0;
-  background: linear-gradient(135deg, #ff3c78, #ff99aa);
-  border-radius: 12px;
-  padding: 30px 20px;
-  text-align: center;
-  color: white;
-  box-shadow: 0 5px 15px rgba(255, 60, 120, 0.5);
-}
-
-#movie-swipe {
-  background: #222;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  margin-bottom: 30px;
-  text-align: center;
-}
-
-#movie-container {
-  position: relative;
-}
-
-#movie-poster {
+#poster {
   max-width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.7);
-  margin-bottom: 12px;
-  max-height: 400px;
-  object-fit: cover;
-  user-select: none;
-}
-
-#movie-title {
-  font-size: 1.5rem;
-  margin: 10px 0 6px;
-}
-
-#movie-overview {
-  font-size: 1rem;
-  max-height: 70px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #ddd;
-}
-
-.swipe-buttons {
-  margin-top: 14px;
-}
-
-.swipe-buttons button {
-  font-size: 2rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin: 0 20px;
-  transition: transform 0.2s ease;
-  color: #ff3c78;
-}
-
-.swipe-buttons button:hover {
-  transform: scale(1.3);
-}
-
-#loading {
-  font-style: italic;
-  margin-top: 12px;
-  color: #ff99aa;
-}
-
-#nomore {
-  margin-top: 12px;
-  font-style: italic;
-  color: #ff99aa;
+  height: auto;
+  border-radius: 8px;
 }
 
 #watchlist {
-  background: #222;
-  padding: 15px 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-#watchlist h3 {
-  margin-top: 0;
-}
-
-#watchlist-items {
-  list-style-type: none;
+  margin-top: 20px;
+  list-style: none;
   padding-left: 0;
-  margin-top: 10px;
 }
 
-#watchlist-items li {
-  padding: 6px 10px;
-  border-bottom: 1px solid #444;
-  font-weight: 500;
-  color: #ffb6c1;
-  user-select: none;
+.hidden {
+  display: none;
 }
