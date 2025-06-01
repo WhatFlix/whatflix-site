@@ -33,3 +33,7 @@ const getRandomMedia = async () => {
 };
 
 surpriseBtn.addEventListener('click', getRandomMedia);
+// Utility to get watchlist from localStorage
+function getWatchlist() {
+  return JSON.parse(localStorage.getItem("watchlist")) || [];
+}
