@@ -1,11 +1,11 @@
-// Firebase Imports
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
+  signOut,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 import {
   getFirestore,
@@ -13,15 +13,16 @@ import {
   getDoc,
   setDoc,
   updateDoc,
-  arrayUnion
+  arrayUnion,
+  arrayRemove
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-// Firebase Config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
   authDomain: "whatflix-a17fb.firebaseapp.com",
   projectId: "whatflix-a17fb",
-  storageBucket: "whatflix-a17fb.appspot.com",
+  storageBucket: "whatflix-a17fb.firebasestorage.app",
   messagingSenderId: "369819362727",
   appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
   measurementId: "G-Z6RX0KXLKY"
@@ -32,210 +33,91 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// DOM Elements
-const authContainer = document.getElementById("auth-container");
-const mainApp = document.getElementById("main-app");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const signInBtn = document.getElementById("signInBtn");
-const signUpBtn = document.getElementById("signUpBtn");
-const signOutBtn = document.getElementById("signOutBtn");
-
-const movieTitleEl = document.getElementById("movie-title");
-const moviePosterEl = document.getElementById("movie-poster");
-const movieOverviewEl = document.getElementById("movie-overview");
-const loadingEl = document.getElementById("loading");
-const watchlistEl = document.getElementById("watchlist-items");
-
-const likeBtn = document.getElementById("likeBtn");
-const dislikeBtn = document.getElementById("dislikeBtn");
-
-// State
-let movies = [];
-let currentIndex = 0;
-let currentUser = null;
-let watchlist = [];
-
-// TMDB API
+// TMDB API Setup
 const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
-// Show loading spinner
-function showLoading(show) {
-  if (show) {
-    loadingEl.classList.remove("hidden");
-  } else {
-    loadingEl.classList.add("hidden");
-  }
+const movieCard = document.getElementById("movie-card");
+const poster = document.getElementById("poster");
+const title = document.getElementById("title");
+const overview = document.getElementById("overview");
+const likeBtn = document.getElementById("like");
+const dislikeBtn = document.getElementById("dislike");
+const watchlistContainer = document.getElementById("watchlist");
+const authSection = document.getElementById("auth-section");
+const appSection = document.getElementById("app-section");
+const signUpForm = document.getElementById("signup-form");
+const signInForm = document.getElementById("signin-form");
+const signOutBtn = document.getElementById("signout-btn");
+
+let currentUser = null;
+let movieQueue = [];
+
+function fetchRandomMovie() {
+  fetch(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&region=GB`)
+    .then(res => res.json())
+    .then(data => {
+      movieQueue = data.results;
+      showNextMovie();
+    });
 }
 
-// Load movies from TMDB
-async function loadMovies() {
-  showLoading(true);
-  try {
-    const res = await fetch(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_watch_providers=8&watch_region=GB`
-    );
-    const data = await res.json();
-    movies = data.results || [];
-    currentIndex = 0;
-    showMovie();
-  } catch (error) {
-    console.error("Error loading movies:", error);
-    movieTitleEl.textContent = "Failed to load movies. Please try again later.";
-    moviePosterEl.src = "";
-    movieOverviewEl.textContent = "";
-  } finally {
-    showLoading(false);
-  }
-}
-
-// Show current movie
-function showMovie() {
-  if (!movies.length || currentIndex >= movies.length) {
-    movieTitleEl.textContent = "No more movies!";
-    moviePosterEl.src = "";
-    movieOverviewEl.textContent = "";
+function showNextMovie() {
+  if (movieQueue.length === 0) {
+    title.innerText = "No more movies!";
+    poster.src = "";
+    overview.innerText = "";
     return;
   }
-  const movie = movies[currentIndex];
-  movieTitleEl.textContent = movie.title;
-  moviePosterEl.src = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : "";
-  moviePosterEl.alt = movie.title + " poster";
-  movieOverviewEl.textContent = movie.overview || "";
+  const movie = movieQueue.shift();
+  title.innerText = movie.title;
+  poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "";
+  overview.innerText = movie.overview;
+  poster.onerror = () => poster.src = "fallback.jpg";
+  likeBtn.onclick = () => saveToWatchlist(movie);
+  dislikeBtn.onclick = showNextMovie;
 }
 
-// Update watchlist UI
-function updateWatchlistUI() {
-  watchlistEl.innerHTML = "";
-  watchlist.forEach((movie) => {
-    const li = document.createElement("li");
-    li.textContent = movie.title;
-    watchlistEl.appendChild(li);
-  });
-}
-
-// Save watchlist to Firestore
-async function saveWatchlistToFirestore() {
+async function saveToWatchlist(movie) {
   if (!currentUser) return;
-  try {
-    const userDocRef = doc(db, "users", currentUser.uid);
-    await setDoc(userDocRef, { watchlist }, { merge: true });
-  } catch (error) {
-    console.error("Error saving watchlist:", error);
-  }
+  const userDocRef = doc(db, "watchlists", currentUser.uid);
+  await setDoc(userDocRef, { movies: arrayUnion(movie) }, { merge: true });
+  showNextMovie();
+  loadWatchlist();
 }
 
-// Load watchlist from Firestore
-async function loadWatchlistFromFirestore() {
+async function loadWatchlist() {
   if (!currentUser) return;
-  try {
-    const userDocRef = doc(db, "users", currentUser.uid);
-    const userDocSnap = await getDoc(userDocRef);
-    if (userDocSnap.exists()) {
-      watchlist = userDocSnap.data().watchlist || [];
-    } else {
-      watchlist = [];
-    }
-    updateWatchlistUI();
-  } catch (error) {
-    console.error("Error loading watchlist:", error);
-  }
+  const userDoc = await getDoc(doc(db, "watchlists", currentUser.uid));
+  const movies = userDoc.exists() ? userDoc.data().movies || [] : [];
+  watchlistContainer.innerHTML = movies.map(m => `<li>${m.title}</li>`).join("");
 }
 
-// Handle Like (Thumbs Up)
-async function handleLike() {
-  if (!movies.length || currentIndex >= movies.length) return;
-  const movie = movies[currentIndex];
-
-  // Avoid duplicates in watchlist
-  if (!watchlist.find(m => m.id === movie.id)) {
-    watchlist.push({ id: movie.id, title: movie.title });
-    updateWatchlistUI();
-    await saveWatchlistToFirestore();
-  }
-
-  currentIndex++;
-  if (currentIndex < movies.length) {
-    showMovie();
-  } else {
-    movieTitleEl.textContent = "No more movies!";
-    moviePosterEl.src = "";
-    movieOverviewEl.textContent = "";
-  }
-}
-
-// Handle Dislike (Thumbs Down)
-function handleDislike() {
-  if (!movies.length || currentIndex >= movies.length) return;
-  currentIndex++;
-  if (currentIndex < movies.length) {
-    showMovie();
-  } else {
-    movieTitleEl.textContent = "No more movies!";
-    moviePosterEl.src = "";
-    movieOverviewEl.textContent = "";
-  }
-}
-
-// Sign In Handler
-signInBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-  if (!email || !password) return alert("Please enter email and password");
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    alert("Sign In Failed: " + error.message);
-  }
+signUpForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const email = signUpForm["signup-email"].value;
+  const password = signUpForm["signup-password"].value;
+  createUserWithEmailAndPassword(auth, email, password).catch(console.error);
 });
 
-// Sign Up Handler
-signUpBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-  if (!email || !password) return alert("Please enter email and password");
-
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-  } catch (error) {
-    alert("Sign Up Failed: " + error.message);
-  }
+signInForm.addEventListener("submit", e => {
+  e.preventDefault();
+  const email = signInForm["signin-email"].value;
+  const password = signInForm["signin-password"].value;
+  signInWithEmailAndPassword(auth, email, password).catch(console.error);
 });
 
-// Sign Out Handler
 signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
-// Auth State Change Listener
-onAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  authSection.style.display = user ? "none" : "block";
+  appSection.style.display = user ? "block" : "none";
   if (user) {
-    currentUser = user;
-    authContainer.classList.add("hidden");
-    mainApp.classList.remove("hidden");
-    emailInput.value = "";
-    passwordInput.value = "";
-    await loadWatchlistFromFirestore();
-    await loadMovies();
-  } else {
-    currentUser = null;
-    authContainer.classList.remove("hidden");
-    mainApp.classList.add("hidden");
-    movies = [];
-    currentIndex = 0;
-    watchlist = [];
-    updateWatchlistUI();
+    fetchRandomMovie();
+    loadWatchlist();
   }
-});
-
-// Like & Dislike Button Listeners
-likeBtn.addEventListener("click", () => {
-  handleLike();
-});
-
-dislikeBtn.addEventListener("click", () => {
-  handleDislike();
 });
