@@ -1,69 +1,40 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #141414;
-  color: white;
-}
+/* WhatFlix Style - Inspired by Netflix, but legally safe 😉 */
 
-.hidden {
-  display: none;
-}
+body { margin: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #141414; color: #fff; }
 
-.auth-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-}
+header { background-color: #111; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
 
-.auth-container input {
-  margin: 0.5rem 0;
-  padding: 0.5rem;
-  width: 100%;
-  max-width: 300px;
-}
+header h1 { color: #e50914; margin: 0; font-size: 1.8rem; letter-spacing: 1px; }
 
-.auth-container button {
-  padding: 0.5rem 1rem;
-  margin-top: 1rem;
-}
+nav button { background: none; border: 1px solid #fff; color: #fff; padding: 0.5rem 1rem; cursor: pointer; transition: background 0.3s; }
 
-#mainContent {
-  padding: 2rem;
-}
+nav button:hover { background-color: #e50914; border: none; }
 
-.card {
-  background-color: #222;
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  text-align: center;
-}
+main { padding: 2rem; }
 
-.card img {
-  max-width: 100%;
-  border-radius: 8px;
-}
+.swipe-zone { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; }
 
-#watchlistItems {
-  list-style: none;
-  padding: 0;
-}
+.card { flex: 0 0 auto; width: 200px; background-color: #222; border-radius: 8px; overflow: hidden; scroll-snap-align: center; transition: transform 0.3s; }
 
-#watchlistItems li {
-  margin: 0.5rem 0;
-  background: #222;
-  padding: 0.5rem;
-  border-radius: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.card:hover { transform: scale(1.05); }
 
-#watchlistItems button {
-  background-color: #e50914;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.5rem;
-  border-radius: 4px;
-}
+.card img { width: 100%; display: block; }
+
+.card h3 { padding: 0.5rem; font-size: 1rem; margin: 0; color: #fff; }
+
+.auth-container { max-width: 400px; margin: 4rem auto; background: #222; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.6); }
+
+.auth-container h2 { margin-bottom: 1.5rem; color: #e50914; text-align: center; }
+
+.auth-container input { width: 100%; padding: 0.75rem; margin-bottom: 1rem; border: none; border-radius: 4px; }
+
+.auth-container button { width: 100%; padding: 0.75rem; background-color: #e50914; border: none; color: white; font-size: 1rem; cursor: pointer; border-radius: 4px; transition: background 0.3s ease; }
+
+.auth-container button:hover { background-color: #b81d24; }
+
+.watchlist { margin-top: 2rem; }
+
+.watchlist h2 { margin-bottom: 1rem; }
+
+.watchlist .card { width: 150px; }
+
