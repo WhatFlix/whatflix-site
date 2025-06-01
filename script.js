@@ -1,28 +1,101 @@
-// Firebase + TMDB Movie Swipe + Auth Logic
+// script.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
-// Firebase imports import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js"; import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js"; import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
+  authDomain: "whatflix-a17fb.firebaseapp.com",
+  projectId: "whatflix-a17fb",
+  storageBucket: "whatflix-a17fb.appspot.com",
+  messagingSenderId: "369819362727",
+  appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
+  measurementId: "G-Z6RX0KXLKY"
+};
 
-// Firebase config const firebaseConfig = { apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0", authDomain: "whatflix-a17fb.firebaseapp.com", projectId: "whatflix-a17fb", storageBucket: "whatflix-a17fb.appspot.com", messagingSenderId: "369819362727", appId: "1:369819362727:web:b55af0726c7b29b8e9c282", measurementId: "G-Z6RX0KXLKY" };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+// UI references
+const authContainer = document.getElementById("auth-container");
+const mainApp = document.getElementById("main-app");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const signInBtn = document.getElementById("signInBtn");
+const signUpBtn = document.getElementById("signUpBtn");
+const signOutBtn = document.getElementById("signOutBtn");
 
-// TMDB API Key const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
+const moviePoster = document.getElementById("movie-poster");
+const movieTitle = document.getElementById("movie-title");
+const likeBtn = document.getElementById("likeBtn");
+const dislikeBtn = document.getElementById("dislikeBtn");
+const watchlistItems = document.getElementById("watchlist-items");
 
-// DOM Elements const loginForm = document.getElementById("login-form"); const emailInput = document.getElementById("email"); const passwordInput = document.getElementById("password"); const signUpBtn = document.getElementById("signup-btn"); const signInBtn = document.getElementById("signin-btn"); const signOutBtn = document.getElementById("signout-btn"); const swipeZone = document.getElementById("swipe-zone"); const watchlist = document.getElementById("watchlist"); const surpriseBtn = document.getElementById("surprise-me");
+let currentMovie = null;
+let watchlist = [];
 
-// Auth state change onAuthStateChanged(auth, (user) => { if (user) { document.getElementById("auth-section").style.display = "none"; document.getElementById("app-section").style.display = "block"; loadMovies(); loadWatchlist(); } else { document.getElementById("auth-section").style.display = "block"; document.getElementById("app-section").style.display = "none"; } });
+const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
 
-// Sign up signUpBtn?.addEventListener("click", async (e) => { e.preventDefault(); const email = emailInput.value; const password = passwordInput.value; try { const userCredential = await createUserWithEmailAndPassword(auth, email, password); await setDoc(doc(db, "users", userCredential.user.uid), { watchlist: [] }); } catch (error) { alert(error.message); } });
+function loadRandomMovie() {
+  fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`)
+    .then(res => res.json())
+    .then(data => {
+      const randomIndex = Math.floor(Math.random() * data.results.length);
+      currentMovie = data.results[randomIndex];
+      moviePoster.src = `https://image.tmdb.org/t/p/w500${currentMovie.poster_path}`;
+      movieTitle.textContent = currentMovie.title;
+    });
+}
 
-// Sign in signInBtn?.addEventListener("click", async (e) => { e.preventDefault(); const email = emailInput.value; const password = passwordInput.value; try { await signInWithEmailAndPassword(auth, email, password); } catch (error) { alert(error.message); } });
+likeBtn.addEventListener("click", () => {
+  if (currentMovie) {
+    const listItem = document.createElement("li");
+    listItem.textContent = currentMovie.title;
+    watchlistItems.appendChild(listItem);
+    loadRandomMovie();
+  }
+});
 
-// Sign out signOutBtn?.addEventListener("click", () => { signOut(auth); });
+dislikeBtn.addEventListener("click", () => {
+  loadRandomMovie();
+});
 
-// Load Movies async function loadMovies() { const res = await fetch(https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_API_KEY}); const data = await res.json(); swipeZone.innerHTML = ""; data.results.forEach(movie => { const card = document.createElement("div"); card.className = "movie-card"; card.innerHTML = <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}"> <h3>${movie.title}</h3> <button onclick="likeMovie(${encodeURIComponent(JSON.stringify(movie))})">Like</button>; swipeZone.appendChild(card); }); }
+signUpBtn.addEventListener("click", () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      console.log("Signed up");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+});
 
-// Like Movie window.likeMovie = async function (movie) { const user = auth.currentUser; if (!user) return; const userRef = doc(db, "users", user.uid); await updateDoc(userRef, { watchlist: arrayUnion(movie) }); loadWatchlist(); }
+signInBtn.addEventListener("click", () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      console.log("Signed in");
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+});
 
-// Load Watchlist async function loadWatchlist() { const user = auth.currentUser; if (!user) return; const userRef = doc(db, "users", user.uid); const docSnap = await getDoc(userRef); const data = docSnap.data(); watchlist.innerHTML = "<h2>Your Watchlist</h2>"; data.watchlist?.forEach(movie => { const item = document.createElement("div"); item.className = "watchlist-item"; item.innerHTML = <p>${movie.title}</p>; watchlist.appendChild(item); }); }
+signOutBtn.addEventListener("click", () => {
+  signOut(auth).then(() => {
+    console.log("Signed out");
+  });
+});
 
-// Surprise Me surpriseBtn?.addEventListener("click", async () => { const res = await fetch(https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}); const data = await res.json(); const randomMovie = data.results[Math.floor(Math.random() * data.results.length)]; alert(Try watching: ${randomMovie.title}); });
-
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    authContainer.classList.add("hidden");
+    mainApp.classList.remove("hidden");
+    loadRandomMovie();
+  } else {
+    authContainer.classList.remove("hidden");
+    mainApp.classList.add("hidden");
+  }
+});
