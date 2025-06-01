@@ -1,22 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhatFlix</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <h1>🎬 WhatFlix Tonight?</h1>
-      <p class="tagline">Press the button and get something worth watching…</p>
-      <button id="surpriseBtn">🎲 Surprise Me</button>
-      <div id="result" class="card hidden">
-        <img id="poster" alt="Poster" />
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatFlix</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <h1>WhatFlix</h1>
+    <p class="tagline">Tonight’s Pick. One Click.</p>
+  </header>  <main>
+    <section id="surprise">
+      <button id="surpriseBtn">Surprise Me</button>
+      <div id="surpriseCard" class="card">
+        <img id="poster" src="" alt="Poster" />
         <h2 id="title"></h2>
+        <div id="badges">
+          <span class="badge" id="badge-platform">🟢 Netflix UK</span>
+          <span class="badge" id="badge-rating"></span>
+          <span class="badge" id="badge-trending">🔥 Trending</span>
+        </div>
         <p id="overview"></p>
       </div>
-    </div>
-    <script src="script.js"></script>
-  </body>
+    </section><nav class="options">
+  <a href="leaderboard.html">Leaderboard</a>
+  <a href="swipe.html">Swipe</a>
+  <a href="watchlist.html">My Watchlist</a>
+  <a href="signin.html">Sign In</a>
+</nav>
+
+  </main>  <footer>
+    <p>&copy; 2025 WhatFlix. Made with 🍿 and ❤️</p>
+  </footer>
+</body>
 </html>
