@@ -7,29 +7,32 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Auth Section -->
   <section class="auth-section">
-    <div class="auth-box">
+    <!-- Sign In Box -->
+    <div id="signInBox" class="auth-box">
       <h2>Sign In</h2>
-      <form id="signInForm">
+      <form id="signInForm" class="auth-form">
         <input type="email" placeholder="Email" required />
         <input type="password" placeholder="Password" required />
         <button type="submit">Sign In</button>
       </form>
-      <p>Don't have an account? <button id="signUpBtn">Sign Up</button></p>
+      <p>Don't have an account? <button id="showSignUp">Sign Up</button></p>
     </div>
 
-    <div class="auth-box hidden">
+    <!-- Sign Up Box -->
+    <div id="signUpBox" class="auth-box hidden">
       <h2>Sign Up</h2>
-      <form id="signUpForm" class="auth-form hidden">
-  <h2>Sign Up</h2>
-  <input type="email" placeholder="Email" required />
-  <input type="password" placeholder="Password" required />
-  <button type="submit">Sign Up</button>
-</form>
-      <p>Already have an account? <button id="signInBtn">Sign In</button></p>
+      <form id="signUpForm" class="auth-form">
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>Already have an account? <button id="showSignIn">Sign In</button></p>
     </div>
   </section>
 
+  <!-- Main App Content -->
   <main id="main" class="hidden">
     <header>
       <h1>WhatFlix</h1>
@@ -38,7 +41,7 @@
 
     <section class="surprise-section">
       <button id="surpriseMeBtn">Surprise Me</button>
-      <div class="swipe-zone" id="swipeZone"></div>
+      <div id="surpriseDisplay" class="swipe-zone"></div>
     </section>
   </main>
 
