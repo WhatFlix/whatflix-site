@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WhatFlix</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -9,38 +10,45 @@
   <div id="auth-container">
     <h1>WhatFlix</h1>
     <div id="auth-forms">
-      <input type="email" id="email" placeholder="Email" />
-      <input type="password" id="password" placeholder="Password" />
+      <input type="email" id="email" placeholder="Email" autocomplete="username" />
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
       <button id="signInBtn">Sign In</button>
       <button id="signUpBtn">Sign Up</button>
     </div>
-  </div>  <div id="main-app" class="hidden">
+  </div>
+
+  <div id="main-app" class="hidden">
     <header class="navbar">
       <h2>Welcome to WhatFlix!</h2>
       <button id="signOutBtn">Sign Out</button>
-    </header><section id="hero">
-  <div class="hero-overlay">
-    <h1 id="hero-title">Discover Your Next Favourite Film</h1>
+    </header>
+
+    <section id="hero">
+      <div class="hero-overlay">
+        <h1 id="hero-title">Discover Your Next Favourite Film</h1>
+      </div>
+    </section>
+
+    <section id="movie-swipe">
+      <h3>Swipe Zone</h3>
+      <div id="movie-container">
+        <img id="movie-poster" src="" alt="Movie Poster" />
+        <h4 id="movie-title"></h4>
+        <p id="movie-overview"></p>
+        <div class="swipe-buttons">
+          <button id="dislikeBtn" title="Dislike">👎</button>
+          <button id="likeBtn" title="Like">👍</button>
+        </div>
+      </div>
+      <div id="loading" class="hidden">Loading movies…</div>
+    </section>
+
+    <section id="watchlist">
+      <h3>Your Watchlist</h3>
+      <ul id="watchlist-items"></ul>
+    </section>
   </div>
-</section>
 
-<section id="movie-swipe">
-  <h3>Swipe Zone</h3>
-  <div id="movie-container">
-    <img id="movie-poster" src="" alt="Movie Poster" />
-    <h4 id="movie-title"></h4>
-    <p id="movie-overview"></p>
-    <div class="swipe-buttons">
-      <button id="dislikeBtn">👎</button>
-      <button id="likeBtn">👍</button>
-    </div>
-  </div>
-</section>
-
-<section id="watchlist">
-  <h3>Your Watchlist</h3>
-  <ul id="watchlist-items"></ul>
-</section>
-
-  </div>  <script type="module" src="script.js"></script></body>
+  <script type="module" src="script.js"></script>
+</body>
 </html>
