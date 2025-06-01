@@ -1,23 +1,9 @@
-// Import Firebase modules
+// Firebase imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  arrayUnion,
-  arrayRemove
-} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-// Firebase config
+// Firebase config (use your own config here)
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
   authDomain: "whatflix-a17fb.firebaseapp.com",
@@ -75,16 +61,14 @@ function showNextMovie() {
   poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "";
   overview.innerText = movie.overview;
   poster.onerror = () => poster.src = "fallback.jpg";
-  likeBtn.onclick = () => saveToWatchlist(movie);
-  dislikeBtn.onclick = showNextMovie;
 }
 
 async function saveToWatchlist(movie) {
   if (!currentUser) return;
   const userDocRef = doc(db, "watchlists", currentUser.uid);
   await setDoc(userDocRef, { movies: arrayUnion(movie) }, { merge: true });
-  showNextMovie();
   loadWatchlist();
+  showNextMovie();
 }
 
 async function loadWatchlist() {
@@ -112,6 +96,19 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
+likeBtn.addEventListener("click", () => {
+  if (movieQueue.length === 0) return;
+  saveToWatchlist({
+    title: title.innerText,
+    poster_path: poster.src,
+    overview: overview.innerText
+  });
+});
+
+dislikeBtn.addEventListener("click", () => {
+  showNextMovie();
+});
+
 onAuthStateChanged(auth, user => {
   currentUser = user;
   authSection.style.display = user ? "none" : "block";
@@ -119,49 +116,5 @@ onAuthStateChanged(auth, user => {
   if (user) {
     fetchRandomMovie();
     loadWatchlist();
-  }
-});
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const signInBtn = document.getElementById("signInBtn");
-const signUpBtn = document.getElementById("signUpBtn");
-const authMessage = document.getElementById("auth-message");
-const authContainer = document.getElementById("auth-container");
-const mainApp = document.getElementById("main-app");
-
-// Sign Up
-signUpBtn.addEventListener("click", async () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    authMessage.textContent = "✅ Sign-up successful!";
-  } catch (error) {
-    authMessage.textContent = `⚠️ Sign-up failed: ${error.message}`;
-  }
-});
-
-// Sign In
-signInBtn.addEventListener("click", async () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    authMessage.textContent = "✅ Sign-in successful!";
-  } catch (error) {
-    authMessage.textContent = `⚠️ Sign-in failed: ${error.message}`;
-  }
-});
-
-// Listen for auth state changes
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    authContainer.classList.add("hidden");
-    mainApp.classList.remove("hidden");
-  } else {
-    mainApp.classList.add("hidden");
-    authContainer.classList.remove("hidden");
   }
 });
