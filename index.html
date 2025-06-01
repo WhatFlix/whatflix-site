@@ -1,4 +1,4 @@
-<!-- index.html --><!DOCTYPE html><html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,12 +15,21 @@
       <button id="signUpBtn">Sign Up</button>
     </div>
   </div>  <div id="main-app" class="hidden">
-    <h2>Welcome to WhatFlix!</h2>
-    <button id="signOutBtn">Sign Out</button><section id="movie-swipe">
+    <header class="navbar">
+      <h2>Welcome to WhatFlix!</h2>
+      <button id="signOutBtn">Sign Out</button>
+    </header><section id="hero">
+  <div class="hero-overlay">
+    <h1 id="hero-title">Discover Your Next Favourite Film</h1>
+  </div>
+</section>
+
+<section id="movie-swipe">
   <h3>Swipe Zone</h3>
   <div id="movie-container">
     <img id="movie-poster" src="" alt="Movie Poster" />
     <h4 id="movie-title"></h4>
+    <p id="movie-overview"></p>
     <div class="swipe-buttons">
       <button id="dislikeBtn">👎</button>
       <button id="likeBtn">👍</button>
