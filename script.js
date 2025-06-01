@@ -1,3 +1,4 @@
+// Firebase Imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import {
   getAuth,
@@ -10,10 +11,12 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  updateDoc,
+  arrayUnion
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
-// Firebase config
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
   authDomain: "whatflix-a17fb.firebaseapp.com",
@@ -24,12 +27,12 @@ const firebaseConfig = {
   measurementId: "G-Z6RX0KXLKY"
 };
 
-// Initialize Firebase and services
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// DOM elements
+// DOM Elements
 const authContainer = document.getElementById("auth-container");
 const mainApp = document.getElementById("main-app");
 const emailInput = document.getElementById("email");
@@ -38,141 +41,83 @@ const signInBtn = document.getElementById("signInBtn");
 const signUpBtn = document.getElementById("signUpBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 
-const titleEl = document.getElementById("movie-title");
-const posterEl = document.getElementById("movie-poster");
-const overviewEl = document.getElementById("movie-overview");
+const movieTitleEl = document.getElementById("movie-title");
+const moviePosterEl = document.getElementById("movie-poster");
+const movieOverviewEl = document.getElementById("movie-overview");
+const loadingEl = document.getElementById("loading");
 const watchlistEl = document.getElementById("watchlist-items");
 
-// Loading spinner element (create and add it)
-const loadingSpinner = document.createElement("div");
-loadingSpinner.className = "loading-spinner";
-loadingSpinner.style.display = "none";
-posterEl.parentElement.insertBefore(loadingSpinner, posterEl);
+const likeBtn = document.getElementById("likeBtn");
+const dislikeBtn = document.getElementById("dislikeBtn");
 
-// Auth events
-signInBtn.addEventListener("click", () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => console.log("Signed in!"))
-    .catch((error) => alert("Sign In Error: " + error.message));
-});
-
-signUpBtn.addEventListener("click", () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => console.log("User created!"))
-    .catch((error) => alert("Sign Up Error: " + error.message));
-});
-
-signOutBtn.addEventListener("click", () => {
-  signOut(auth);
-});
-
-// TMDB API key and variables
-const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
+// State
 let movies = [];
 let currentIndex = 0;
+let currentUser = null;
 let watchlist = [];
 
-// Listen for auth state changes
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    authContainer.classList.add("hidden");
-    mainApp.classList.remove("hidden");
+// TMDB API
+const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
 
-    // Load watchlist from Firestore for this user
-    const watchlistDocRef = doc(db, "watchlists", user.uid);
-    const docSnap = await getDoc(watchlistDocRef);
-    if (docSnap.exists()) {
-      watchlist = docSnap.data().movies || [];
-    } else {
-      watchlist = [];
-    }
-    updateWatchlist();
-
-    loadMovies();
+// Show loading spinner
+function showLoading(show) {
+  if (show) {
+    loadingEl.classList.remove("hidden");
   } else {
-    authContainer.classList.remove("hidden");
-    mainApp.classList.add("hidden");
-    watchlist = [];
-    updateWatchlist();
+    loadingEl.classList.add("hidden");
   }
-});
+}
 
-// Load movies with loading spinner
+// Load movies from TMDB
 async function loadMovies() {
   showLoading(true);
   try {
-    const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_watch_providers=8&watch_region=GB`);
+    const res = await fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_watch_providers=8&watch_region=GB`
+    );
     const data = await res.json();
-    movies = data.results;
+    movies = data.results || [];
     currentIndex = 0;
     showMovie();
-  } catch (err) {
-    console.error("Error loading movies:", err);
-    titleEl.textContent = "Failed to load movies.";
-    posterEl.src = "";
-    overviewEl.textContent = "";
+  } catch (error) {
+    console.error("Error loading movies:", error);
+    movieTitleEl.textContent = "Failed to load movies. Please try again later.";
+    moviePosterEl.src = "";
+    movieOverviewEl.textContent = "";
   } finally {
     showLoading(false);
   }
 }
 
-function showLoading(isLoading) {
-  if (isLoading) {
-    loadingSpinner.style.display = "block";
-    posterEl.style.display = "none";
-  } else {
-    loadingSpinner.style.display = "none";
-    posterEl.style.display = "block";
-  }
-}
-
-// Show current movie details
+// Show current movie
 function showMovie() {
   if (!movies.length || currentIndex >= movies.length) {
-    titleEl.textContent = "No more movies!";
-    posterEl.src = "";
-    overviewEl.textContent = "";
+    movieTitleEl.textContent = "No more movies!";
+    moviePosterEl.src = "";
+    movieOverviewEl.textContent = "";
     return;
   }
-
   const movie = movies[currentIndex];
-  titleEl.textContent = movie.title;
-  overviewEl.textContent = movie.overview || "";
-  posterEl.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  movieTitleEl.textContent = movie.title;
+  moviePosterEl.src = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "";
+  moviePosterEl.alt = movie.title + " poster";
+  movieOverviewEl.textContent = movie.overview || "";
 }
 
-// Like button event: add movie to watchlist and save
-document.getElementById("likeBtn").addEventListener("click", async () => {
-  if (movies[currentIndex]) {
-    watchlist.push(movies[currentIndex]);
-    updateWatchlist();
-
-    const user = auth.currentUser;
-    if (user) {
-      const watchlistDocRef = doc(db, "watchlists", user.uid);
-      await setDoc(watchlistDocRef, { movies: watchlist });
-    }
-  }
-  currentIndex++;
-  showMovie();
-});
-
-// Dislike button event: just advance
-document.getElementById("dislikeBtn").addEventListener("click", () => {
-  currentIndex++;
-  showMovie();
-});
-
 // Update watchlist UI
-function updateWatchlist() {
-  watchlistEl.innerHTML = ""; // Clear existing items
+function updateWatchlistUI() {
+  watchlistEl.innerHTML = "";
   watchlist.forEach((movie) => {
     const li = document.createElement("li");
     li.textContent = movie.title;
     watchlistEl.appendChild(li);
   });
 }
+
+// Save watchlist to Firestore
+async function saveWatchlistToFirestore() {
+  if (!currentUser) return;
+  try {
+    const userDocRef
