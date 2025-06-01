@@ -1,100 +1,126 @@
+// Replace with your own TMDb API key here
+const TMDB_API_KEY = '406d510b8114c3a454abf556a384a949';
+
 // DOM Elements
-const signInForm = document.getElementById("signInForm");
-const signUpForm = document.getElementById("signUpForm");
-const signOutBtn = document.getElementById("signOutBtn");
+const signInBox = document.getElementById('signInBox');
+const signUpBox = document.getElementById('signUpBox');
+const mainContent = document.getElementById('mainContent');
 
-const signInBox = document.getElementById("signInBox");
-const signUpBox = document.getElementById("signUpBox");
-const authSection = document.querySelector(".auth-section");
-const mainContent = document.getElementById("main");
+const signInForm = document.getElementById('signInForm');
+const signUpForm = document.getElementById('signUpForm');
+const signOutBtn = document.getElementById('signOutBtn');
 
-const surpriseBtn = document.getElementById("surpriseMeBtn");
-const swipeZone = document.getElementById("swipeZone");
-const watchlistContainer = document.getElementById("watchlistContainer");
+const goSignUp = document.getElementById('goSignUp');
+const goSignIn = document.getElementById('goSignIn');
 
-const showSignUpBtn = document.getElementById("showSignUp");
-const showSignInBtn = document.getElementById("showSignIn");
+const surpriseMeBtn = document.getElementById('surpriseMeBtn');
+const swipeZone = document.getElementById('swipeZone');
 
-const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949"; // <-- Replace with your TMDb API key
+const watchlistItems = document.getElementById('watchlistItems');
 
-// Load users and check current user
-const users = JSON.parse(localStorage.getItem("whatflix_users") || "{}");
-let currentUser = localStorage.getItem("whatflix_user");
+let users = JSON.parse(localStorage.getItem('whatflix_users') || '{}');
+let currentUser = localStorage.getItem('whatflix_user') || null;
+let watchlist = [];
 
-if (currentUser) {
-  showMainContent();
-} else {
-  signInBox.classList.remove("hidden");
-  signUpBox.classList.add("hidden");
+function saveUsers() {
+  localStorage.setItem('whatflix_users', JSON.stringify(users));
 }
 
-// Toggle Auth Views
-showSignUpBtn?.addEventListener("click", () => {
-  signInBox.classList.add("hidden");
-  signUpBox.classList.remove("hidden");
-});
+function saveCurrentUser(user) {
+  localStorage.setItem('whatflix_user', user);
+}
 
-showSignInBtn?.addEventListener("click", () => {
-  signUpBox.classList.add("hidden");
-  signInBox.classList.remove("hidden");
-});
+function saveWatchlist() {
+  if (!currentUser) return;
+  users[currentUser].watchlist = watchlist;
+  saveUsers();
+}
 
-// Sign Up Logic
-signUpForm?.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const email = signUpForm.querySelector("input[type='email']").value.trim().toLowerCase();
-  const password = signUpForm.querySelector("input[type='password']").value.trim();
+// Show / Hide Auth and Main sections
+function showAuth() {
+  signInBox.classList.remove('hidden');
+  signUpBox.classList.add('hidden');
+  mainContent.classList.add('hidden');
+}
 
-  if (!users[email]) {
-    users[email] = { password, watchlist: [] };
-    localStorage.setItem("whatflix_users", JSON.stringify(users));
-    localStorage.setItem("whatflix_user", email);
-    currentUser = email;
-    showMainContent();
-    loadWatchlist();
-  } else {
-    alert("User already exists!");
+function showSignUp() {
+  signInBox.classList.add('hidden');
+  signUpBox.classList.remove('hidden');
+  mainContent.classList.add('hidden');
+}
+
+function showMain() {
+  signInBox.classList.add('hidden');
+  signUpBox.classList.add('hidden');
+  mainContent.classList.remove('hidden');
+}
+
+// Update watchlist UI
+function renderWatchlist() {
+  watchlistItems.innerHTML = '';
+  if (!watchlist.length) {
+    watchlistItems.innerHTML = '<li>Your watchlist is empty.</li>';
+    return;
   }
-});
+  watchlist.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item.title;
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      watchlist = watchlist.filter(w => w.id !== item.id);
+      renderWatchlist();
+      saveWatchlist();
+    });
+    li.appendChild(removeBtn);
+    watchlistItems.appendChild(li);
+  });
+}
 
-// Sign In Logic
-signInForm?.addEventListener("submit", (e) => {
+// Authentication Handlers
+
+signInForm.addEventListener('submit', e => {
   e.preventDefault();
-  const email = signInForm.querySelector("input[type='email']").value.trim().toLowerCase();
-  const password = signInForm.querySelector("input[type='password']").value.trim();
+  const email = document.getElementById('signInEmail').value.toLowerCase();
+  const password = document.getElementById('signInPassword').value;
 
   if (users[email] && users[email].password === password) {
-    localStorage.setItem("whatflix_user", email);
     currentUser = email;
-    showMainContent();
-    loadWatchlist();
+    watchlist = users[email].watchlist || [];
+    saveCurrentUser(email);
+    showMain();
+    renderWatchlist();
   } else {
-    alert("Incorrect email or password.");
+    alert('Incorrect email or password.');
   }
 });
 
-// Sign Out
-signOutBtn?.addEventListener("click", () => {
-  localStorage.removeItem("whatflix_user");
-  currentUser = null;
-  mainContent.classList.add("hidden");
-  authSection.classList.remove("hidden");
-  signInBox.classList.remove("hidden");
-  signUpBox.classList.add("hidden");
-  swipeZone.innerHTML = "";
-  watchlistContainer.innerHTML = "";
+signUpForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('signUpEmail').value.toLowerCase();
+  const password = document.getElementById('signUpPassword').value;
+
+  if (users[email]) {
+    alert('User already exists!');
+    return;
+  }
+
+  users[email] = { password, watchlist: [] };
+  saveUsers();
+
+  currentUser = email;
+  watchlist = [];
+  saveCurrentUser(email);
+  showMain();
+  renderWatchlist();
 });
 
-// Show Main Content After Login
-function showMainContent() {
-  authSection.classList.add("hidden");
-  mainContent.classList.remove("hidden");
-  loadWatchlist();
-  swipeZone.innerHTML = ""; // clear any previous cards
-}
+signOutBtn.addEventListener('click', () => {
+  currentUser = null;
+  watchlist = [];
+  localStorage.removeItem('whatflix_user');
+  showAuth();
+  swipeZone.innerHTML = '';
+});
 
-// Fetch trending shows from TMDb
-async function fetchTrending() {
-  try {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/trending/all/day
+goSignUp
