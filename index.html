@@ -1,51 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WhatFlix</title>
   <link rel="stylesheet" href="style.css" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";const firebaseConfig = {
+  apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
+  authDomain: "whatflix-a17fb.firebaseapp.com",
+  projectId: "whatflix-a17fb",
+  storageBucket: "whatflix-a17fb.appspot.com",
+  messagingSenderId: "369819362727",
+  appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
+  measurementId: "G-Z6RX0KXLKY"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.firebaseAuth = auth;
+window.firebaseMethods = {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+};
+
+  </script>
 </head>
 <body>
-  <section id="authSection">
-    <div id="signInBox" class="auth-box">
+  <div id="authContainer">
+    <div id="signInBox">
       <h2>Sign In</h2>
       <form id="signInForm">
-        <input id="signInEmail" type="email" placeholder="Email" required />
-        <input id="signInPassword" type="password" placeholder="Password" required />
+        <input type="email" id="signInEmail" placeholder="Email" required />
+        <input type="password" id="signInPassword" placeholder="Password" required />
         <button type="submit">Sign In</button>
+        <p><a href="#" id="goSignUp">Don't have an account? Sign Up</a></p>
       </form>
-      <p>Don't have an account? <button id="goSignUp" class="link-btn">Sign Up</button></p>
-    </div>
+    </div><div id="signUpBox" class="hidden">
+  <h2>Sign Up</h2>
+  <form id="signUpForm">
+    <input type="email" id="signUpEmail" placeholder="Email" required />
+    <input type="password" id="signUpPassword" placeholder="Password" required />
+    <button type="submit">Sign Up</button>
+    <p><a href="#" id="goSignIn">Already have an account? Sign In</a></p>
+  </form>
+</div>
 
-    <div id="signUpBox" class="auth-box hidden">
-      <h2>Sign Up</h2>
-      <form id="signUpForm">
-        <input id="signUpEmail" type="email" placeholder="Email" required />
-        <input id="signUpPassword" type="password" placeholder="Password" required />
-        <button type="submit">Sign Up</button>
-      </form>
-      <p>Already have an account? <button id="goSignIn" class="link-btn">Sign In</button></p>
-    </div>
-  </section>
-
-  <main id="mainContent" class="hidden">
-    <header>
-      <h1>WhatFlix</h1>
-      <button id="signOutBtn" class="signout-btn">Sign Out</button>
-    </header>
-
-    <section class="surprise-section">
-      <button id="surpriseMeBtn" class="surprise-btn">Surprise Me</button>
-      <div id="swipeZone" class="swipe-zone"></div>
-    </section>
-
-    <section class="watchlist-section">
-      <h2>Your Watchlist</h2>
-      <ul id="watchlistItems" class="watchlist-items"></ul>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
-</body>
+  </div>  <div id="mainContent" class="hidden">
+    <button id="signOutBtn">Sign Out</button>
+    <h1>Welcome to WhatFlix!</h1>
+    <button id="surpriseMeBtn">Surprise Me</button>
+    <div id="swipeZone"></div>
+    <h2>Your Watchlist</h2>
+    <ul id="watchlistItems"></ul>
+  </div>  <script src="script.js" type="module"></script></body>
 </html>
