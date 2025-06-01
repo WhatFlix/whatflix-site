@@ -2,70 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WhatFlix - Discover Your Next Watch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatFlix — Surprise Me</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
+  <div class="container">
     <h1>WhatFlix</h1>
-    <p>Find your next binge by country & streaming platform</p>
-  </header>
-
-  <main>
-    <section id="filters">
-      <div class="filter-group">
-        <label for="country-select">Country:</label>
-        <select id="country-select" aria-label="Select country">
-          <option value="US">United States</option>
-          <option value="GB">United Kingdom</option>
-          <option value="CA">Canada</option>
-          <option value="DE">Germany</option>
-          <option value="FR">France</option>
-          <option value="IN">India</option>
-          <option value="AU">Australia</option>
-          <!-- Add more countries as needed -->
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="platform-select">Platform:</label>
-        <select id="platform-select" aria-label="Select streaming platform">
-          <option value="">All Platforms</option>
-          <option value="8">Netflix</option>
-          <option value="9">Amazon Prime Video</option>
-          <option value="337">Disney+</option>
-          <option value="384">Hulu</option>
-          <option value="15">HBO Max</option>
-          <!-- Add more TMDb provider IDs as needed -->
-        </select>
-      </div>
-    </section>
-
-    <button id="surprise-me" aria-live="polite">Surprise Me!</button>
-
-    <section id="result" aria-live="polite" aria-atomic="true"></section>
-
-    <section id="leaderboard-section">
-      <h2>Most Flixed WhatFlixers</h2>
-      <ul id="leaderboard">
-        <!-- Leaderboard entries inserted here -->
-      </ul>
-    </section>
-
-    <section id="user-profile-section">
-      <h2>Your Profile</h2>
-      <div id="user-profile">
-        <p><strong>Name:</strong> <span id="user-name">Guest</span></p>
-        <p><strong>Movies Watched:</strong> <span id="user-movies-watched">0</span></p>
-        <button id="reset-profile">Reset Profile</button>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>Powered by TMDb API & WhatFlix</p>
-  </footer>
+    <p class="tagline">Feeling indecisive? Let us surprise you.</p>
+    <button id="surpriseBtn">🎲 Surprise Me</button>
+    <div id="movieDisplay" class="movie-display"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
