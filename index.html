@@ -5,54 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WhatFlix</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Firebase SDKs -->
-  <script type="module" src="https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js"></script>
 </head>
 <body>
-  <div id="auth-container">
+  <div id="auth-section">
     <h1>WhatFlix</h1>
-    <div id="auth-forms">
-      <input type="email" id="email" placeholder="Email" autocomplete="username" />
-      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-      <button id="signInBtn">Sign In</button>
-      <button id="signUpBtn">Sign Up</button>
-    </div>
-    <div id="auth-message"></div>
+    <form id="signup-form">
+      <input type="email" name="signup-email" placeholder="Email" required />
+      <input type="password" name="signup-password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <form id="signin-form">
+      <input type="email" name="signin-email" placeholder="Email" required />
+      <input type="password" name="signin-password" placeholder="Password" required />
+      <button type="submit">Sign In</button>
+    </form>
   </div>
 
-  <div id="main-app" class="hidden">
-    <header class="navbar">
-      <h2>Welcome to WhatFlix!</h2>
-      <button id="signOutBtn">Sign Out</button>
-    </header>
+  <div id="app-section" style="display:none;">
+    <button id="signout-btn">Sign Out</button>
+    <div id="movie-card">
+      <img id="poster" src="" alt="Movie Poster" />
+      <h2 id="title"></h2>
+      <p id="overview"></p>
+      <button id="like">Like 👍</button>
+      <button id="dislike">Dislike 👎</button>
+    </div>
 
-    <section id="hero">
-      <div class="hero-overlay">
-        <h1 id="hero-title">Discover Your Next Favourite Film</h1>
-      </div>
-    </section>
-
-    <section id="movie-swipe">
-      <h3>Swipe Zone</h3>
-      <div id="movie-container">
-        <img id="movie-poster" src="" alt="Movie Poster" />
-        <h4 id="movie-title"></h4>
-        <p id="movie-overview"></p>
-        <div class="swipe-buttons">
-          <button id="dislikeBtn" title="Dislike">👎</button>
-          <button id="likeBtn" title="Like">👍</button>
-        </div>
-      </div>
-      <div id="loading" class="hidden">Loading movies…</div>
-      <div id="nomore" class="hidden">No more movies available!</div>
-    </section>
-
-    <section id="watchlist">
-      <h3>Your Watchlist</h3>
-      <ul id="watchlist-items"></ul>
-    </section>
+    <h3>Your Watchlist</h3>
+    <ul id="watchlist"></ul>
   </div>
 
   <script type="module" src="script.js"></script>
