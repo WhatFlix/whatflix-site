@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WhatFlix – Leaderboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>🏆 WhatFlix Leaderboard</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="#">Coming Soon</a>
+    </nav>
+  </header>
+  <main>
+    <section class="leaderboard">
+      <h2>Most Flixed WhatFlixers</h2>
+      <ol id="leaderboard-list"></ol>
+    </section>
+  </main>
+  <script>
+    const users = [
+      { name: "Seb", flixCount: 89 },
+      { name: "Lottie", flixCount: 76 },
+      { name: "Rivka", flixCount: 65 },
+    ];
+    const list = document.getElementById("leaderboard-list");
+    users.forEach((u, i) => {
+      const item = document.createElement("li");
+      item.innerHTML = `<strong>#${i + 1}</strong> ${u.name} – ${u.flixCount} Flix`;
+      list.appendChild(item);
+    });
+  </script>
+</body>
+</html>
