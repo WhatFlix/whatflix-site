@@ -72,12 +72,28 @@ const sampleTitles = [
   { title: "The Crown", image: "https://image.tmdb.org/t/p/w500/el3zBQk1eYJDAi6JpsnCyhVG0Vv.jpg" },
 ];
 
-surpriseBtn?.addEventListener("click", () => {
-  const pick = sampleTitles[Math.floor(Math.random() * sampleTitles.length)];
-  surpriseDisplay.innerHTML = `
-    <div class="surprise-card">
-      <img src="${pick.image}" alt="${pick.title}" />
-      <h3>${pick.title}</h3>
-    </div>
-  `;
+const apiKey = "406d510b8114c3a454abf556a384a949";
+const apiUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_watch_providers=8&watch_region=GB&sort_by=popularity.desc`;
+
+surpriseBtn?.addEventListener("click", async () => {
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    const shows = data.results;
+
+    if (shows.length > 0) {
+      const pick = shows[Math.floor(Math.random() * shows.length)];
+      surpriseDisplay.innerHTML = `
+        <div class="surprise-card">
+          <img src="https://image.tmdb.org/t/p/w500${pick.poster_path}" alt="${pick.name}" />
+          <h3>${pick.name}</h3>
+        </div>
+      `;
+    } else {
+      surpriseDisplay.innerHTML = "<p>No shows found. Try again later.</p>";
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    surpriseDisplay.innerHTML = "<p>Oops! Something went wrong.</p>";
+  }
 });
