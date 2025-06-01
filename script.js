@@ -120,4 +120,122 @@ function updateWatchlistUI() {
 async function saveWatchlistToFirestore() {
   if (!currentUser) return;
   try {
-    const userDocRef
+    const userDocRef = doc(db, "users", currentUser.uid);
+    await setDoc(userDocRef, { watchlist }, { merge: true });
+  } catch (error) {
+    console.error("Error saving watchlist:", error);
+  }
+}
+
+// Load watchlist from Firestore
+async function loadWatchlistFromFirestore() {
+  if (!currentUser) return;
+  try {
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const userDocSnap = await getDoc(userDocRef);
+    if (userDocSnap.exists()) {
+      watchlist = userDocSnap.data().watchlist || [];
+    } else {
+      watchlist = [];
+    }
+    updateWatchlistUI();
+  } catch (error) {
+    console.error("Error loading watchlist:", error);
+  }
+}
+
+// Handle Like (Thumbs Up)
+async function handleLike() {
+  if (!movies.length || currentIndex >= movies.length) return;
+  const movie = movies[currentIndex];
+
+  // Avoid duplicates in watchlist
+  if (!watchlist.find(m => m.id === movie.id)) {
+    watchlist.push({ id: movie.id, title: movie.title });
+    updateWatchlistUI();
+    await saveWatchlistToFirestore();
+  }
+
+  currentIndex++;
+  if (currentIndex < movies.length) {
+    showMovie();
+  } else {
+    movieTitleEl.textContent = "No more movies!";
+    moviePosterEl.src = "";
+    movieOverviewEl.textContent = "";
+  }
+}
+
+// Handle Dislike (Thumbs Down)
+function handleDislike() {
+  if (!movies.length || currentIndex >= movies.length) return;
+  currentIndex++;
+  if (currentIndex < movies.length) {
+    showMovie();
+  } else {
+    movieTitleEl.textContent = "No more movies!";
+    moviePosterEl.src = "";
+    movieOverviewEl.textContent = "";
+  }
+}
+
+// Sign In Handler
+signInBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || !password) return alert("Please enter email and password");
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    alert("Sign In Failed: " + error.message);
+  }
+});
+
+// Sign Up Handler
+signUpBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (!email || !password) return alert("Please enter email and password");
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    alert("Sign Up Failed: " + error.message);
+  }
+});
+
+// Sign Out Handler
+signOutBtn.addEventListener("click", () => {
+  signOut(auth);
+});
+
+// Auth State Change Listener
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    authContainer.classList.add("hidden");
+    mainApp.classList.remove("hidden");
+    emailInput.value = "";
+    passwordInput.value = "";
+    await loadWatchlistFromFirestore();
+    await loadMovies();
+  } else {
+    currentUser = null;
+    authContainer.classList.remove("hidden");
+    mainApp.classList.add("hidden");
+    movies = [];
+    currentIndex = 0;
+    watchlist = [];
+    updateWatchlistUI();
+  }
+});
+
+// Like & Dislike Button Listeners
+likeBtn.addEventListener("click", () => {
+  handleLike();
+});
+
+dislikeBtn.addEventListener("click", () => {
+  handleDislike();
+});
