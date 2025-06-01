@@ -2,37 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WhatFlix – Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatFlix Leaderboard</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background-color: #141414;
+      color: #fff;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      padding: 1rem;
+      background-color: #e50914;
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    .leaderboard-container {
+      padding: 2rem;
+    }
+
+    .leaderboard-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .leaderboard {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #222;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .user {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid #333;
+    }
+
+    .user:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      font-weight: bold;
+      color: #e50914;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    a {
+      color: #e50914;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <h1>🏆 WhatFlix Leaderboard</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="leaderboard.html">Leaderboard</a>
-      <a href="#">Coming Soon</a>
-    </nav>
+    WhatFlix Leaderboard
   </header>
-  <main>
-    <section class="leaderboard">
-      <h2>Most Flixed WhatFlixers</h2>
-      <ol id="leaderboard-list"></ol>
-    </section>
-  </main>
-  <script>
-    const users = [
-      { name: "Seb", flixCount: 89 },
-      { name: "Lottie", flixCount: 76 },
-      { name: "Rivka", flixCount: 65 },
-    ];
-    const list = document.getElementById("leaderboard-list");
-    users.forEach((u, i) => {
-      const item = document.createElement("li");
-      item.innerHTML = `<strong>#${i + 1}</strong> ${u.name} – ${u.flixCount} Flix`;
-      list.appendChild(item);
-    });
-  </script>
+
+  <div class="leaderboard-container">
+    <div class="leaderboard-title">🔥 Most Flixed WhatFlixers</div>
+
+    <div class="leaderboard">
+      <div class="user"><span class="rank">#1</span> <span>Alice</span> <span>132 shows</span></div>
+      <div class="user"><span class="rank">#2</span> <span>Bob</span> <span>118 shows</span></div>
+      <div class="user"><span class="rank">#3</span> <span>Charlie</span> <span>105 shows</span></div>
+      <div class="user"><span class="rank">#4</span> <span>Dave</span> <span>99 shows</span></div>
+      <div class="user"><span class="rank">#5</span> <span>Eve</span> <span>94 shows</span></div>
+    </div>
+
+    <div class="footer">
+      Think you can beat the top flixers? <a href="index.html">Start watching</a> and climb the charts!
+    </div>
+  </div>
 </body>
 </html>
