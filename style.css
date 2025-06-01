@@ -1,199 +1,233 @@
-/* Basic reset */
+/* Reset & Basics */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #121212;
+  background-color: #141414;
   color: #eee;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   align-items: center;
   justify-content: center;
-}
-
-.auth-section {
-  width: 100%;
-  max-width: 400px;
-  padding: 2rem;
-}
-
-.auth-box {
-  background: #1f1f1f;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #0f0f0f;
-  margin-bottom: 1rem;
-}
-
-.auth-box h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.auth-box input {
-  display: block;
-  width: 100%;
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.auth-box button {
-  width: 100%;
-  padding: 0.8rem;
-  font-size: 1.1rem;
-  background-color: #e50914;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-}
-
-.auth-box button:hover {
-  background-color: #f40612;
-}
-
-.link-btn {
-  background: none;
-  border: none;
-  color: #e50914;
-  cursor: pointer;
-  font-weight: 600;
-  text-decoration: underline;
-  padding: 0;
-  font-size: 1rem;
+  padding: 20px;
 }
 
 .hidden {
   display: none !important;
 }
 
-main#main {
+/* Auth Boxes */
+.auth-box {
+  background-color: #222;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 320px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.7);
+  margin-bottom: 20px;
+}
+
+.auth-box h2 {
+  margin-bottom: 15px;
+  text-align: center;
+  color: #fff;
+}
+
+.auth-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-box input {
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+}
+
+.auth-box input:focus {
+  outline: 2px solid #ff4500;
+  background-color: #333;
+  color: #fff;
+}
+
+.auth-box button {
+  background-color: #ff4500;
+  border: none;
+  padding: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.25s ease;
+}
+
+.auth-box button:hover {
+  background-color: #e03e00;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #ff4500;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  font-size: 1rem;
+}
+
+/* Main Content */
+#mainContent {
   width: 100%;
   max-width: 900px;
-  padding: 1rem;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 25px;
 }
 
 header h1 {
-  margin: 0;
-  color: #e50914;
+  font-size: 2.5rem;
+  color: #ff4500;
 }
 
-header button {
-  background-color: #444;
-  border: none;
-  border-radius: 5px;
-  color: #eee;
-  padding: 0.5rem 1rem;
+.signout-btn {
+  background-color: #222;
+  color: #ff4500;
+  border: 2px solid #ff4500;
+  padding: 10px 18px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 700;
   font-size: 1rem;
+  transition: background-color 0.25s ease;
 }
 
-header button:hover {
-  background-color: #e50914;
+.signout-btn:hover {
+  background-color: #ff4500;
+  color: #141414;
 }
 
+/* Surprise Section */
 .surprise-section {
-  margin-bottom: 2rem;
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-#surpriseMeBtn {
-  background-color: #e50914;
+.surprise-btn {
+  background-color: #ff4500;
+  color: #fff;
   border: none;
-  border-radius: 5px;
-  padding: 0.8rem 1.2rem;
-  font-size: 1.1rem;
-  color: white;
+  padding: 14px 30px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 8px;
   cursor: pointer;
-  margin-bottom: 1rem;
-  display: block;
+  transition: background-color 0.25s ease;
+  margin-bottom: 20px;
 }
 
-#surpriseMeBtn:hover {
-  background-color: #f40612;
+.surprise-btn:hover {
+  background-color: #e03e00;
 }
 
 .swipe-zone {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: 300px;
-  margin: 0 auto;
-  perspective: 1000px;
-}
-
-.swipe-card {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: #222;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
-  padding: 1rem;
-  user-select: none;
-  transition: transform 0.3s ease;
-  cursor: grab;
+  min-height: 300px;
 }
 
-.swipe-card img {
-  width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 0.5rem;
-}
-
-.swipe-card h3 {
-  margin: 0;
-  color: #e50914;
+.card {
+  background-color: #222;
+  border-radius: 12px;
+  padding: 15px;
+  width: 220px;
+  box-shadow: 0 0 20px rgba(255,69,0,0.5);
   text-align: center;
-  user-select: text;
+  color: #fff;
 }
 
-.watchlist-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.watchlist-item {
-  background: #1f1f1f;
-  border-radius: 10px;
-  width: 120px;
-  box-shadow: 0 0 10px #0f0f0f;
-  padding: 0.5rem;
-  text-align: center;
-}
-
-.watchlist-item img {
+.card img {
   width: 100%;
   border-radius: 8px;
-  margin-bottom: 0.3rem;
+  margin-bottom: 10px;
 }
 
-.watchlist-item p {
-  font-size: 0.9rem;
-  margin: 0;
+.card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.card button {
+  background-color: #ff4500;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+.card button:hover {
+  background-color: #e03e00;
+}
+
+/* Watchlist Section */
+.watchlist-section {
+  background-color: #222;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  box-shadow: 0 0 15px rgba(255,69,0,0.5);
+}
+
+.watchlist-section h2 {
+  margin-bottom: 15px;
+  color: #ff4500;
+  text-align: center;
+}
+
+.watchlist-items {
+  list-style: none;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.watchlist-items li {
+  display: flex;
+  justify-content: space-between;
+  background: #333;
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 1rem;
   color: #eee;
-  user-select: text;
+  align-items: center;
+}
+
+.watchlist-items button {
+  background-color: #ff4500;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+.watchlist-items button:hover {
+  background-color: #e03e00;
 }
