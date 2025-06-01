@@ -9,10 +9,11 @@ import {
 import {
   getFirestore,
   doc,
-  setDoc,
-  getDoc
+  getDoc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
   authDomain: "whatflix-a17fb.firebaseapp.com",
@@ -23,6 +24,7 @@ const firebaseConfig = {
   measurementId: "G-Z6RX0KXLKY"
 };
 
+// Initialize Firebase and services
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -36,7 +38,18 @@ const signInBtn = document.getElementById("signInBtn");
 const signUpBtn = document.getElementById("signUpBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 
-// Auth Events
+const titleEl = document.getElementById("movie-title");
+const posterEl = document.getElementById("movie-poster");
+const overviewEl = document.getElementById("movie-overview");
+const watchlistEl = document.getElementById("watchlist-items");
+
+// Loading spinner element (create and add it)
+const loadingSpinner = document.createElement("div");
+loadingSpinner.className = "loading-spinner";
+loadingSpinner.style.display = "none";
+posterEl.parentElement.insertBefore(loadingSpinner, posterEl);
+
+// Auth events
 signInBtn.addEventListener("click", () => {
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -57,14 +70,40 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
-// TMDB Logic
+// TMDB API key and variables
 const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
 let movies = [];
 let currentIndex = 0;
 let watchlist = [];
 
-// Load movies from TMDB API
+// Listen for auth state changes
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    authContainer.classList.add("hidden");
+    mainApp.classList.remove("hidden");
+
+    // Load watchlist from Firestore for this user
+    const watchlistDocRef = doc(db, "watchlists", user.uid);
+    const docSnap = await getDoc(watchlistDocRef);
+    if (docSnap.exists()) {
+      watchlist = docSnap.data().movies || [];
+    } else {
+      watchlist = [];
+    }
+    updateWatchlist();
+
+    loadMovies();
+  } else {
+    authContainer.classList.remove("hidden");
+    mainApp.classList.add("hidden");
+    watchlist = [];
+    updateWatchlist();
+  }
+});
+
+// Load movies with loading spinner
 async function loadMovies() {
+  showLoading(true);
   try {
     const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&with_watch_providers=8&watch_region=GB`);
     const data = await res.json();
@@ -73,15 +112,26 @@ async function loadMovies() {
     showMovie();
   } catch (err) {
     console.error("Error loading movies:", err);
+    titleEl.textContent = "Failed to load movies.";
+    posterEl.src = "";
+    overviewEl.textContent = "";
+  } finally {
+    showLoading(false);
   }
 }
 
-// Show current movie in swipe zone
-function showMovie() {
-  const titleEl = document.getElementById("movie-title");
-  const posterEl = document.getElementById("movie-poster");
-  const overviewEl = document.getElementById("movie-overview");
+function showLoading(isLoading) {
+  if (isLoading) {
+    loadingSpinner.style.display = "block";
+    posterEl.style.display = "none";
+  } else {
+    loadingSpinner.style.display = "none";
+    posterEl.style.display = "block";
+  }
+}
 
+// Show current movie details
+function showMovie() {
   if (!movies.length || currentIndex >= movies.length) {
     titleEl.textContent = "No more movies!";
     posterEl.src = "";
@@ -91,76 +141,38 @@ function showMovie() {
 
   const movie = movies[currentIndex];
   titleEl.textContent = movie.title;
+  overviewEl.textContent = movie.overview || "";
   posterEl.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-  overviewEl.textContent = movie.overview;
 }
 
-// Update watchlist UI
-function updateWatchlist() {
-  const listEl = document.getElementById("watchlist-items");
-  listEl.innerHTML = ""; // Clear existing items
-  watchlist.forEach((movie) => {
-    const li = document.createElement("li");
-    li.textContent = movie.title;
-    listEl.appendChild(li);
-  });
-}
-
-// Save watchlist to Firestore
-async function saveWatchlist(userId, watchlist) {
-  try {
-    await setDoc(doc(db, "watchlists", userId), { movies: watchlist });
-  } catch (error) {
-    console.error("Error saving watchlist:", error);
-  }
-}
-
-// Load watchlist from Firestore
-async function loadWatchlist(userId) {
-  try {
-    const docRef = doc(db, "watchlists", userId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      watchlist = docSnap.data().movies || [];
-      updateWatchlist();
-    } else {
-      watchlist = [];
-      updateWatchlist();
-    }
-  } catch (error) {
-    console.error("Error loading watchlist:", error);
-  }
-}
-
-// Swipe button events
+// Like button event: add movie to watchlist and save
 document.getElementById("likeBtn").addEventListener("click", async () => {
   if (movies[currentIndex]) {
     watchlist.push(movies[currentIndex]);
     updateWatchlist();
-    if (auth.currentUser) {
-      await saveWatchlist(auth.currentUser.uid, watchlist);
+
+    const user = auth.currentUser;
+    if (user) {
+      const watchlistDocRef = doc(db, "watchlists", user.uid);
+      await setDoc(watchlistDocRef, { movies: watchlist });
     }
   }
   currentIndex++;
   showMovie();
 });
 
+// Dislike button event: just advance
 document.getElementById("dislikeBtn").addEventListener("click", () => {
   currentIndex++;
   showMovie();
 });
 
-// Auth state listener - toggles UI and loads data
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    authContainer.classList.add("hidden");
-    mainApp.classList.remove("hidden");
-    loadMovies();
-    loadWatchlist(user.uid);
-  } else {
-    authContainer.classList.remove("hidden");
-    mainApp.classList.add("hidden");
-    watchlist = [];
-  }
-});
+// Update watchlist UI
+function updateWatchlist() {
+  watchlistEl.innerHTML = ""; // Clear existing items
+  watchlist.forEach((movie) => {
+    const li = document.createElement("li");
+    li.textContent = movie.title;
+    watchlistEl.appendChild(li);
+  });
+}
