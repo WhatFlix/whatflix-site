@@ -3,104 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WhatFlix - Surprise Me with a Movie!</title>
-  
-  <!-- Netflix-style red + clean modern font -->
-  <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;700&display=swap" rel="stylesheet" />
-  
+  <title>WhatFlix - Discover Your Next Watch</title>
   <link rel="stylesheet" href="style.css" />
-  
-  <style>
-    /* Minimal inline reset + essential styles for quick preview */
-    body {
-      margin: 0;
-      background-color: #141414;
-      color: #fff;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      align-items: center;
-      padding: 2rem 1rem;
-    }
-    h1 {
-      color: #e50914;
-      margin-bottom: 1rem;
-    }
-    .movie-container {
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-    }
-    .surprise-btn {
-      background-color: #e50914;
-      border: none;
-      padding: 1rem 2rem;
-      color: white;
-      font-size: 1.25rem;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
-      margin-bottom: 1.5rem;
-    }
-    .surprise-btn:hover {
-      background-color: #b0060e;
-    }
-    .movie-info {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #ddd;
-    }
-    .movie-poster {
-      width: 100%;
-      max-width: 300px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-      margin-bottom: 1rem;
-    }
-    .movie-details {
-      text-align: left;
-      max-width: 300px;
-    }
-    .movie-details h2 {
-      margin: 0 0 0.5rem 0;
-      color: #e50914;
-    }
-    .movie-details p {
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: #ccc;
-    }
-    .hidden {
-      display: none;
-    }
-    footer {
-      margin-top: auto;
-      padding: 1rem 0;
-      font-size: 0.8rem;
-      color: #666;
-    }
-  </style>
 </head>
 <body>
+  <header>
+    <h1>WhatFlix</h1>
+    <p>Find your next binge by country & streaming platform</p>
+  </header>
 
-  <h1>WhatFlix</h1>
-  <p>Not sure what to watch? Let us surprise you!</p>
-
-  <div class="movie-container">
-    <button id="surprise-btn" class="surprise-btn">Surprise Me 🎬</button>
-    <div id="movie-info" class="movie-info hidden" aria-live="polite">
-      <img id="movie-poster" class="movie-poster" alt="Movie Poster" />
-      <div class="movie-details">
-        <h2 id="movie-title"></h2>
-        <p id="movie-overview"></p>
+  <main>
+    <section id="filters">
+      <div class="filter-group">
+        <label for="country-select">Country:</label>
+        <select id="country-select" aria-label="Select country">
+          <option value="US">United States</option>
+          <option value="GB">United Kingdom</option>
+          <option value="CA">Canada</option>
+          <option value="DE">Germany</option>
+          <option value="FR">France</option>
+          <option value="IN">India</option>
+          <option value="AU">Australia</option>
+          <!-- Add more countries as needed -->
+        </select>
       </div>
-    </div>
-  </div>
+
+      <div class="filter-group">
+        <label for="platform-select">Platform:</label>
+        <select id="platform-select" aria-label="Select streaming platform">
+          <option value="">All Platforms</option>
+          <option value="8">Netflix</option>
+          <option value="9">Amazon Prime Video</option>
+          <option value="337">Disney+</option>
+          <option value="384">Hulu</option>
+          <option value="15">HBO Max</option>
+          <!-- Add more TMDb provider IDs as needed -->
+        </select>
+      </div>
+    </section>
+
+    <button id="surprise-me" aria-live="polite">Surprise Me!</button>
+
+    <section id="result" aria-live="polite" aria-atomic="true"></section>
+
+    <section id="leaderboard-section">
+      <h2>Most Flixed WhatFlixers</h2>
+      <ul id="leaderboard">
+        <!-- Leaderboard entries inserted here -->
+      </ul>
+    </section>
+
+    <section id="user-profile-section">
+      <h2>Your Profile</h2>
+      <div id="user-profile">
+        <p><strong>Name:</strong> <span id="user-name">Guest</span></p>
+        <p><strong>Movies Watched:</strong> <span id="user-movies-watched">0</span></p>
+        <button id="reset-profile">Reset Profile</button>
+      </div>
+    </section>
+  </main>
 
   <footer>
-    &copy; 2025 WhatFlix &mdash; Powered by TMDb API
+    <p>Powered by TMDb API & WhatFlix</p>
   </footer>
 
   <script src="script.js"></script>
