@@ -1,21 +1,22 @@
-const API_KEY = '406d510b8114c3a454abf556a384a949';
-const BASE_URL = 'https://api.themoviedb.org/3';
-const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
+// Elements
+const showSigninBtn = document.getElementById('show-signin-btn');
+const showSignupBtn = document.getElementById('show-signup-btn');
+const signinForm = document.getElementById('signin-form');
+const signupForm = document.getElementById('signup-form');
+
+const authSection = document.getElementById('auth-section');
+const filterSection = document.getElementById('filter-section');
+const resultSection = document.getElementById('result-section');
+const movieCard = document.getElementById('movie-card');
 
 const surpriseBtn = document.getElementById('surprise-btn');
-const movieDisplay = document.getElementById('movie-display');
-const moviePoster = document.getElementById('movie-poster');
-const movieTitle = document.getElementById('movie-title');
-const movieOverview = document.getElementById('movie-overview');
-const moviePlatforms = document.getElementById('movie-platforms');
-const addWatchlistBtn = document.getElementById('add-watchlist-btn');
+const countrySelect = document.getElementById('country-select');
+const providerSelect = document.getElementById('provider-select');
 
-const signinBtn = document.getElementById('signin-btn');
-const signupBtn = document.getElementById('signup-btn');
-const signoutBtn = document.getElementById('signout-btn');
-const userGreeting = document.getElementById('user-greeting');
+const leaderboardSection = document.getElementById('leaderboard-section');
+const leaderboardList = document.getElementById('leaderboard-list');
 
-const signinModal = document.getElementById('signin-modal');
-const signupModal = document.getElementById('signup-modal');
+const watchlistSection = document.getElementById('watchlist-section');
+const watchlistList = document.getElementById('watchlist-list');
 
-const close
+// TM
