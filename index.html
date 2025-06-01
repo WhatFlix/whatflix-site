@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatFlix — Surprise Me</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>WhatFlix</h1>
-    <p class="tagline">Feeling indecisive? Let us surprise you.</p>
-    <button id="surpriseBtn">🎲 Surprise Me</button>
-    <div id="movieDisplay" class="movie-display"></div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WhatFlix</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎬 WhatFlix Tonight?</h1>
+      <p class="tagline">Press the button and get something worth watching…</p>
+      <button id="surpriseBtn">🎲 Surprise Me</button>
+      <div id="result" class="card hidden">
+        <img id="poster" alt="Poster" />
+        <h2 id="title"></h2>
+        <p id="overview"></p>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
 </html>
