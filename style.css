@@ -1,88 +1,160 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #141414;
-  color: #fff;
+/* Navigation auth buttons */
+#auth-nav {
+  background-color: var(--dark-gray);
+  padding: 0.5rem 2rem;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.container {
-  text-align: center;
-  max-width: 600px;
-  padding: 20px;
-}
-
-h1 {
-  color: #e50914;
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.tagline {
-  margin-bottom: 2rem;
-  color: #ccc;
-}
-
-button {
-  background-color: #e50914;
-  color: white;
-  padding: 1rem 2rem;
-  border: none;
-  font-size: 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s ease-in-out;
-}
-
-button:hover {
-  background-color: #b20710;
-}
-
-.card {
-  background-color: #222;
-  padding: 1rem;
-  margin-top: 2rem;
-  border-radius: 8px;
-  text-align: left;
-  display: none;
-}
-
-.card img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-}
-
-.hidden {
-  display: none;
-}
-nav ul {
-  list-style: none;
-  display: flex;
+  justify-content: flex-end;
   gap: 1rem;
 }
 
-nav ul li a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
+#auth-nav button {
+  background-color: var(--netflix-red);
+  border: none;
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.3s ease;
 }
 
-nav {
-  background-color: #111;
-  padding: 1rem;
+#auth-nav button:hover {
+  background-color: #b20710;
+}
+
+#user-greeting {
+  color: var(--light-gray);
+  align-self: center;
+  font-weight: 600;
+}
+
+/* Modal background and content */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: var(--dark-gray);
+  padding: 2rem;
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
+}
+
+.modal input {
+  width: 90%;
+  padding: 0.7rem;
+  margin: 0.5rem 0;
+  border-radius: 4px;
+  border: none;
+  font-size: 1rem;
+}
+
+.modal button {
+  background-color: var(--netflix-red);
+  color: var(--white);
+  border: none;
+  padding: 0.7rem 1.5rem;
+  margin: 0.3rem;
+  cursor: pointer;
+  border-radius: 3px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: #b20710;
+}
+
+/* Watchlist */
+#watchlist-section {
+  background-color: var(--dark-gray);
+  padding: 1rem 2rem;
+  margin: 2rem auto;
+  max-width: 700px;
+  border-radius: 6px;
+  color: var(--white);
+}
+
+#watchlist {
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#watchlist li {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--light-gray);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-body {
-  background-color: #000;
-  color: #fff;
-  font-family: 'Helvetica Neue', sans-serif;
-  margin: 0;
-  padding: 0;
+#watchlist li button {
+  background-color: transparent;
+  border: none;
+  color: var(--netflix-red);
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+/* Leaderboard */
+#leaderboard-section {
+  background-color: var(--dark-gray);
+  padding: 1rem 2rem;
+  margin: 2rem auto 4rem;
+  max-width: 700px;
+  border-radius: 6px;
+  color: var(--white);
+}
+
+#leaderboard {
+  list-style-position: inside;
+}
+
+#leaderboard li {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Swipe cards container */
+#swipe-cards {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.swipe-card {
+  background-color: var(--dark-gray);
+  border-radius: 6px;
+  width: 150px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swipe-card img {
+  width: 100%;
+  border-radius: 6px 6px 0 0;
+  object-fit: cover;
+  height: 225px;
+}
+
+.swipe-card h3 {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+  text-align: center;
+  color: var(--white);
+  padding: 0 0.5rem 0.5rem;
 }
