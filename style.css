@@ -159,3 +159,13 @@ button:hover {
 #signOutBtn:hover {
   background-color: #f40612;
 }
+.logo-container {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.logo {
+  max-width: 180px;
+  height: auto;
+  display: inline-block;
+}
