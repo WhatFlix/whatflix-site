@@ -1,34 +1,19 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatFlix</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WhatFlix | Tonight's Pick</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <header>
-    <h1>WhatFlix</h1>
-    <p class="tagline">Your Social Streaming Companion 🎬</p>
-  </header>
-  <main>
-    <section class="hero">
-      <h2>Discover What Your Friends Are Watching</h2>
-      <div class="carousel">
-        <!-- placeholder posters -->
-        <img src="poster1.jpg" alt="Movie 1">
-        <img src="poster2.jpg" alt="Movie 2">
-        <img src="poster3.jpg" alt="Movie 3">
-      </div>
-    </section>
-    <section class="features">
-      <div class="card">💾 Save Your Watchlist</div>
-      <div class="card">👥 Follow Friends</div>
-      <div class="card">🔥 Trending Now</div>
-    </section>
-  </main>
-  <footer>© 2025 WhatFlix. All rights reserved.</footer>
+  <div class="container">
+    <h1>🎬 Tonight’s Pick</h1>
+    <div id="movie-card" class="card loading">
+      <p>Loading...</p>
+    </div>
+    <button id="refresh-btn">Surprise Me Again</button>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
