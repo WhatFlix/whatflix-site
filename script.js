@@ -47,7 +47,9 @@ signUpBtn.addEventListener("click", () => {
 });
 
 signOutBtn.addEventListener("click", () => {
-  signOut(auth);
+  signOut(auth)
+    .then(() => console.log("Signed out!"))
+    .catch((error) => alert("Sign Out Error: " + error.message));
 });
 
 // Auth State Listener
@@ -83,16 +85,19 @@ async function loadMovies() {
 function showMovie() {
   const titleEl = document.getElementById("movie-title");
   const posterEl = document.getElementById("movie-poster");
+  const overviewEl = document.getElementById("movie-overview");
 
   if (!movies.length || currentIndex >= movies.length) {
     titleEl.textContent = "No more movies!";
     posterEl.src = "";
+    overviewEl.textContent = "";
     return;
   }
 
   const movie = movies[currentIndex];
   titleEl.textContent = movie.title;
-  posterEl.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  posterEl.src = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "";
+  overviewEl.textContent = movie.overview || "No overview available.";
 }
 
 // Swipe Events
@@ -111,7 +116,7 @@ document.getElementById("dislikeBtn").addEventListener("click", () => {
 });
 
 function updateWatchlist() {
-  const listEl = document.getElementById("watchlist");
+  const listEl = document.getElementById("watchlist-items");
   listEl.innerHTML = ""; // Clear existing items
   watchlist.forEach((movie) => {
     const li = document.createElement("li");
