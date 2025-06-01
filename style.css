@@ -1,106 +1,199 @@
+/* Basic reset */
+* {
+  box-sizing: border-box;
+}
+
 body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #121212;
+  color: #eee;
   margin: 0;
-  font-family: "Helvetica Neue", sans-serif;
-  background-color: #141414;
-  color: #fff;
-}
-
-header {
+  padding: 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  min-height: 100vh;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #111;
-  border-bottom: 1px solid #333;
-}
-
-h1 {
-  font-size: 2rem;
-  color: #e50914;
-  margin: 0;
-}
-
-button {
-  background-color: #e50914;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  margin: 0.5rem 0;
-  cursor: pointer;
-  font-weight: bold;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #f40612;
+  justify-content: center;
 }
 
 .auth-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 4rem 1rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
 }
 
 .auth-box {
-  max-width: 300px;
-  width: 100%;
-  background-color: #222;
+  background: #1f1f1f;
   padding: 2rem;
-  margin: 1rem 0;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  border-radius: 10px;
+  box-shadow: 0 0 15px #0f0f0f;
+  margin-bottom: 1rem;
+}
+
+.auth-box h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .auth-box input {
+  display: block;
   width: 100%;
-  padding: 0.5rem;
-  margin: 0.5rem 0;
-  border-radius: 4px;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
   border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.auth-box button {
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  background-color: #e50914;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.auth-box button:hover {
+  background-color: #f40612;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #e50914;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 1rem;
 }
 
 .hidden {
   display: none !important;
 }
 
+main#main {
+  width: 100%;
+  max-width: 900px;
+  padding: 1rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+header h1 {
+  margin: 0;
+  color: #e50914;
+}
+
+header button {
+  background-color: #444;
+  border: none;
+  border-radius: 5px;
+  color: #eee;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+header button:hover {
+  background-color: #e50914;
+}
+
 .surprise-section {
-  text-align: center;
-  margin: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+#surpriseMeBtn {
+  background-color: #e50914;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.1rem;
+  color: white;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+#surpriseMeBtn:hover {
+  background-color: #f40612;
 }
 
 .swipe-zone {
   position: relative;
-  width: 90%;
-  max-width: 400px;
-  height: 500px;
-  margin: 2rem auto;
-  overflow: hidden;
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  margin: 0 auto;
+  perspective: 1000px;
 }
 
 .swipe-card {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #222;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  background: #222;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 1rem;
+  user-select: none;
+  transition: transform 0.3s ease;
+  cursor: grab;
 }
 
 .swipe-card img {
-  width: 80%;
-  height: auto;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
 }
 
 .swipe-card h3 {
   margin: 0;
-  font-size: 1.2rem;
+  color: #e50914;
+  text-align: center;
+  user-select: text;
+}
+
+.watchlist-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.watchlist-item {
+  background: #1f1f1f;
+  border-radius: 10px;
+  width: 120px;
+  box-shadow: 0 0 10px #0f0f0f;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.watchlist-item img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 0.3rem;
+}
+
+.watchlist-item p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #eee;
+  user-select: text;
 }
