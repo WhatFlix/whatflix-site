@@ -7,16 +7,15 @@ const authSection = document.querySelector(".auth-section");
 const mainContent = document.getElementById("main");
 const surpriseBtn = document.getElementById("surpriseMeBtn");
 const surpriseDisplay = document.getElementById("surpriseDisplay");
+const swipeZone = document.getElementById("swipeZone");
 
 const users = JSON.parse(localStorage.getItem("whatflix_users") || "{}");
 let currentUser = localStorage.getItem("whatflix_user");
 
 // Show main content if already logged in
-if (currentUser) {
-  showMainContent();
-}
+if (currentUser) showMainContent();
 
-// Event Listeners
+// Auth Logic
 signInBtn?.addEventListener("click", () => {
   signUpForm.classList.add("hidden");
   signInForm.classList.remove("hidden");
@@ -59,41 +58,59 @@ signInForm?.addEventListener("submit", (e) => {
   }
 });
 
-// Show/hide content
 function showMainContent() {
   authSection.classList.add("hidden");
   mainContent.classList.remove("hidden");
+  loadSwipeCards();
 }
 
-// Surprise Me feature (placeholder content)
+// Surprise Me Feature
 const sampleTitles = [
   { title: "Breaking Bad", image: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" },
   { title: "Stranger Things", image: "https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg" },
   { title: "The Crown", image: "https://image.tmdb.org/t/p/w500/el3zBQk1eYJDAi6JpsnCyhVG0Vv.jpg" },
 ];
 
-const apiKey = "406d510b8114c3a454abf556a384a949";
-const apiUrl = `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&with_watch_providers=8&watch_region=GB&sort_by=popularity.desc`;
-
-surpriseBtn?.addEventListener("click", async () => {
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-    const shows = data.results;
-
-    if (shows.length > 0) {
-      const pick = shows[Math.floor(Math.random() * shows.length)];
-      surpriseDisplay.innerHTML = `
-        <div class="surprise-card">
-          <img src="https://image.tmdb.org/t/p/w500${pick.poster_path}" alt="${pick.name}" />
-          <h3>${pick.name}</h3>
-        </div>
-      `;
-    } else {
-      surpriseDisplay.innerHTML = "<p>No shows found. Try again later.</p>";
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    surpriseDisplay.innerHTML = "<p>Oops! Something went wrong.</p>";
-  }
+surpriseBtn?.addEventListener("click", () => {
+  const pick = sampleTitles[Math.floor(Math.random() * sampleTitles.length)];
+  surpriseDisplay.innerHTML = `
+    <div class="surprise-card">
+      <img src="${pick.image}" alt="${pick.title}" />
+      <h3>${pick.title}</h3>
+    </div>
+  `;
 });
+
+// Swipe Feature
+function loadSwipeCards() {
+  swipeZone.innerHTML = "";
+  sampleTitles.forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "swipe-card";
+    card.style.zIndex = sampleTitles.length - index;
+    card.innerHTML = `<img src="${item.image}" alt="${item.title}"><h3>${item.title}</h3>`;
+    swipeZone.appendChild(card);
+
+    let offset = 0;
+    let isDragging = false;
+
+    card.addEventListener("mousedown", () => (isDragging = true));
+    document.addEventListener("mouseup", () => {
+      if (isDragging && Math.abs(offset) > 100) {
+        card.style.transform = `translateX(${offset > 0 ? 1000 : -1000}px)`;
+        card.style.opacity = "0";
+        setTimeout(() => card.remove(), 300);
+      } else {
+        card.style.transform = "translateX(0)";
+      }
+      isDragging = false;
+      offset = 0;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      offset = e.movementX + offset;
+      card.style.transform = `translateX(${offset}px) rotate(${offset / 20}deg)`;
+    });
+  });
+}
