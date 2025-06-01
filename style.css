@@ -65,6 +65,12 @@ h1, h2, h3, h4 {
   background-color: #ff3360;
 }
 
+#auth-message {
+  color: #ff3360;
+  margin-top: 10px;
+  min-height: 20px;
+}
+
 #main-app {
   width: 100%;
   max-width: 700px;
@@ -164,6 +170,12 @@ h1, h2, h3, h4 {
 #loading {
   font-style: italic;
   margin-top: 12px;
+  color: #ff99aa;
+}
+
+#nomore {
+  margin-top: 12px;
+  font-style: italic;
   color: #ff99aa;
 }
 
