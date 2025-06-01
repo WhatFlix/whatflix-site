@@ -3,42 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Swipe - WhatFlix</title>
+  <title>Swipe | WhatFlix</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .swipe-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 80px;
-      gap: 1rem;
-    }
+</head>
+<body class="swipe-page">
+  <nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="swipe.html" class="active">🔥 Swipe</a>
+    <a href="watchlist.html">📺 Watchlist</a>
+    <a href="leaderboard.html">🏆 Leaderboard</a>
+    <a href="#" id="logoutBtn">🚪 Logout</a>
+  </nav>
 
-    .card {
-      width: 300px;
-      height: 450px;
-      background-color: #141414;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: flex-end;
-      padding: 1rem;
-      color: white;
-      font-size: 1.2rem;
-      font-weight: bold;
-      transition: transform 0.3s ease;
-    }
+  <main class="swipe-container">
+    <h2>🔥 Swipe Your Way to the Perfect Watch</h2>
+    <div id="swipeCardContainer"></div>
+    <div class="swipe-buttons">
+      <button id="skipBtn">👎 Skip</button>
+      <button id="likeBtn">👍 Like</button>
+    </div>
+  </main>
 
-    .swipe-buttons {
-      display: flex;
-      gap: 2rem;
-      margin-top: 1rem;
-    }
-
-    .swipe-buttons button {
-      background-color: #e50914;
-      color: white;
-      border: none;
-      padding: 0.8rem
+  <script src="swipe.js"></script>
+</body>
+</html>
