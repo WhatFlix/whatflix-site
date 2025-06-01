@@ -1,60 +1,195 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatFlix</title>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";const firebaseConfig = {
-  apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
-  authDomain: "whatflix-a17fb.firebaseapp.com",
-  projectId: "whatflix-a17fb",
-  storageBucket: "whatflix-a17fb.appspot.com",
-  messagingSenderId: "369819362727",
-  appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
-  measurementId: "G-Z6RX0KXLKY"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-window.firebaseAuth = auth;
-window.firebaseMethods = {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-};
-
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatFlix - Firebase Auth Demo</title>
+  <style>
+    /* Simple styling */
+    body {
+      font-family: Arial, sans-serif;
+      background: #141414;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .auth-container {
+      background: #222;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 320px;
+      box-shadow: 0 0 15px #000;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    input {
+      padding: 0.75rem;
+      border-radius: 4px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.75rem;
+      border: none;
+      border-radius: 4px;
+      background: #e50914;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #b0060e;
+    }
+    .toggle-btn {
+      margin-top: 1rem;
+      background: transparent;
+      color: #aaa;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-align: center;
+      border: none;
+    }
+    .hidden {
+      display: none;
+    }
+    .message {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+  </style>
 </head>
 <body>
-  <div id="authContainer">
+  <div class="auth-container">
+
+    <!-- Sign In Box -->
     <div id="signInBox">
       <h2>Sign In</h2>
       <form id="signInForm">
-        <input type="email" id="signInEmail" placeholder="Email" required />
-        <input type="password" id="signInPassword" placeholder="Password" required />
+        <input id="signInEmail" type="email" placeholder="Email" required />
+        <input id="signInPassword" type="password" placeholder="Password" required />
         <button type="submit">Sign In</button>
-        <p><a href="#" id="goSignUp">Don't have an account? Sign Up</a></p>
       </form>
-    </div><div id="signUpBox" class="hidden">
-  <h2>Sign Up</h2>
-  <form id="signUpForm">
-    <input type="email" id="signUpEmail" placeholder="Email" required />
-    <input type="password" id="signUpPassword" placeholder="Password" required />
-    <button type="submit">Sign Up</button>
-    <p><a href="#" id="goSignIn">Already have an account? Sign In</a></p>
-  </form>
-</div>
+      <button id="goSignUp" class="toggle-btn">Don't have an account? Sign Up</button>
+    </div>
 
-  </div>  <div id="mainContent" class="hidden">
-    <button id="signOutBtn">Sign Out</button>
-    <h1>Welcome to WhatFlix!</h1>
-    <button id="surpriseMeBtn">Surprise Me</button>
-    <div id="swipeZone"></div>
-    <h2>Your Watchlist</h2>
-    <ul id="watchlistItems"></ul>
-  </div>  <script src="script.js" type="module"></script></body>
+    <!-- Sign Up Box -->
+    <div id="signUpBox" class="hidden">
+      <h2>Create Account</h2>
+      <form id="signUpForm">
+        <input id="signUpEmail" type="email" placeholder="Email" required />
+        <input id="signUpPassword" type="password" placeholder="Password" required minlength="6" />
+        <button type="submit">Sign Up</button>
+      </form>
+      <button id="goSignIn" class="toggle-btn">Already have an account? Sign In</button>
+    </div>
+
+    <div id="message" class="message"></div>
+  </div>
+
+  <!-- Firebase SDK & app script -->
+  <script type="module" defer>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
+      authDomain: "whatflix-a17fb.firebaseapp.com",
+      projectId: "whatflix-a17fb",
+      storageBucket: "whatflix-a17fb.firebasestorage.app",
+      messagingSenderId: "369819362727",
+      appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
+      measurementId: "G-Z6RX0KXLKY"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // DOM Elements
+    const signInBox = document.getElementById('signInBox');
+    const signUpBox = document.getElementById('signUpBox');
+    const messageDiv = document.getElementById('message');
+
+    // Toggle buttons
+    const goSignUpBtn = document.getElementById('goSignUp');
+    const goSignInBtn = document.getElementById('goSignIn');
+
+    // Show sign up form
+    goSignUpBtn.addEventListener('click', () => {
+      signInBox.classList.add('hidden');
+      signUpBox.classList.remove('hidden');
+      messageDiv.textContent = '';
+    });
+
+    // Show sign in form
+    goSignInBtn.addEventListener('click', () => {
+      signUpBox.classList.add('hidden');
+      signInBox.classList.remove('hidden');
+      messageDiv.textContent = '';
+    });
+
+    // Sign In form submission
+    document.getElementById('signInForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = e.target.signInEmail.value.trim();
+      const password = e.target.signInPassword.value.trim();
+      messageDiv.textContent = 'Signing in...';
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        messageDiv.style.color = 'limegreen';
+        messageDiv.textContent = `Welcome back, ${email}! You are signed in.`;
+        // TODO: Redirect or load main app UI here
+      } catch (error) {
+        messageDiv.style.color = 'tomato';
+        messageDiv.textContent = 'Sign in failed: ' + error.message;
+      }
+    });
+
+    // Sign Up form submission
+    document.getElementById('signUpForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const email = e.target.signUpEmail.value.trim();
+      const password = e.target.signUpPassword.value.trim();
+      messageDiv.textContent = 'Creating account...';
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        messageDiv.style.color = 'limegreen';
+        messageDiv.textContent = `Account created! Welcome, ${email}! You are signed in.`;
+        // TODO: Redirect or load main app UI here
+      } catch (error) {
+        messageDiv.style.color = 'tomato';
+        messageDiv.textContent = 'Sign up failed: ' + error.message;
+      }
+    });
+
+    // Optionally listen for auth state changes (to auto-update UI)
+    /*
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        messageDiv.style.color = 'limegreen';
+        messageDiv.textContent = `Signed in as ${user.email}`;
+        // Show main content
+      } else {
+        messageDiv.textContent = '';
+        // Show auth forms
+      }
+    });
+    */
+  </script>
+</body>
 </html>
