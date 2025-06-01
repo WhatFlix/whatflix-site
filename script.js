@@ -1,6 +1,11 @@
-// script.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
@@ -24,14 +29,12 @@ const signInBtn = document.getElementById("signInBtn");
 const signUpBtn = document.getElementById("signUpBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 
-// Auth Functions
+// Auth Events
 signInBtn.addEventListener("click", () => {
   const email = emailInput.value;
   const password = passwordInput.value;
   signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      console.log("Signed in!");
-    })
+    .then(() => console.log("Signed in!"))
     .catch((error) => alert("Sign In Error: " + error.message));
 });
 
@@ -39,9 +42,7 @@ signUpBtn.addEventListener("click", () => {
   const email = emailInput.value;
   const password = passwordInput.value;
   createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      console.log("User created!");
-    })
+    .then(() => console.log("User created!"))
     .catch((error) => alert("Sign Up Error: " + error.message));
 });
 
@@ -49,19 +50,19 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
-// Show/hide correct views on auth state change
+// Auth State Listener
 onAuthStateChanged(auth, (user) => {
   if (user) {
     authContainer.classList.add("hidden");
     mainApp.classList.remove("hidden");
-    loadMovies(); // Load movies after sign in
+    loadMovies();
   } else {
     authContainer.classList.remove("hidden");
     mainApp.classList.add("hidden");
   }
 });
 
-// TMDB + Swipe Logic
+// TMDB Logic
 const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
 let movies = [];
 let currentIndex = 0;
@@ -80,17 +81,21 @@ async function loadMovies() {
 }
 
 function showMovie() {
-  if (movies.length === 0 || currentIndex >= movies.length) {
-    document.getElementById("movie-title").textContent = "No more movies!";
-    document.getElementById("movie-poster").src = "";
+  const titleEl = document.getElementById("movie-title");
+  const posterEl = document.getElementById("movie-poster");
+
+  if (!movies.length || currentIndex >= movies.length) {
+    titleEl.textContent = "No more movies!";
+    posterEl.src = "";
     return;
   }
 
   const movie = movies[currentIndex];
-  document.getElementById("movie-title").textContent = movie.title;
-  document.getElementById("movie-poster").src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  titleEl.textContent = movie.title;
+  posterEl.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
 }
 
+// Swipe Events
 document.getElementById("likeBtn").addEventListener("click", () => {
   if (movies[currentIndex]) {
     watchlist.push(movies[currentIndex]);
@@ -106,11 +111,11 @@ document.getElementById("dislikeBtn").addEventListener("click", () => {
 });
 
 function updateWatchlist() {
-  const list = document.getElementById("watchlist-items");
-  list.innerHTML = "";
+  const listEl = document.getElementById("watchlist");
+  listEl.innerHTML = ""; // Clear existing items
   watchlist.forEach((movie) => {
     const li = document.createElement("li");
     li.textContent = movie.title;
-    list.appendChild(li);
+    listEl.appendChild(li);
   });
 }
