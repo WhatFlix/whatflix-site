@@ -1,3 +1,4 @@
+/* Reset and base styles */
 *,
 *::before,
 *::after {
@@ -6,12 +7,13 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: #121212;
+  background: #2e2e2e;
   color: #fff;
   margin: 0;
   padding: 20px;
 }
 
+/* Containers for auth and app sections */
 #auth-section,
 #app-section {
   max-width: 400px;
@@ -19,6 +21,7 @@ body {
   padding: 10px;
 }
 
+/* Forms */
 form {
   background: #1f1f1f;
   padding: 15px;
@@ -27,6 +30,7 @@ form {
   width: 100%;
 }
 
+/* Inputs */
 input {
   display: block;
   width: 100%;
@@ -39,6 +43,7 @@ input {
   font-size: 1rem;
 }
 
+/* Buttons */
 button {
   width: 100%;
   padding: 10px 20px;
@@ -56,6 +61,7 @@ button:hover {
   background-color: #f40612;
 }
 
+/* Movie card */
 #movie-card {
   background: #1f1f1f;
   border-radius: 8px;
@@ -64,27 +70,28 @@ button:hover {
   margin-top: 30px;
 }
 
+/* Movie poster */
 #poster {
   max-width: 100%;
   border-radius: 8px;
   height: auto;
 }
 
-#watchlist,
-#friend-feed {
+/* Watchlist */
+#watchlist {
   margin-top: 20px;
   list-style-type: none;
   padding-left: 0;
 }
 
-#watchlist li,
-#friend-feed li {
+#watchlist li {
   background: #282828;
   margin: 5px 0;
   padding: 10px;
   border-radius: 4px;
 }
 
+/* Swipe buttons container */
 .swipe-buttons {
   display: flex;
   justify-content: center;
@@ -92,6 +99,7 @@ button:hover {
   margin-top: 15px;
 }
 
+/* Individual swipe buttons */
 .swipe-buttons button {
   width: 60px;
   height: 60px;
@@ -108,10 +116,21 @@ button:hover {
   color: white;
 }
 
+/* Loading and no more movies messages */
+#loading,
+#nomore {
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  color: #888;
+}
+
+/* Hidden helper class */
 .hidden {
   display: none;
 }
 
+/* Navbar */
 .navbar {
   max-width: 400px;
   margin: 0 auto 20px;
@@ -123,6 +142,23 @@ button:hover {
   border-radius: 8px;
 }
 
+.navbar h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+/* Header sign out button */
+#signOutBtn {
+  width: auto;
+  padding: 8px 16px;
+  background-color: #e50914;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+#signOutBtn:hover {
+  background-color: #f40612;
+}
 .logo-container {
   text-align: center;
   margin-top: 1rem;
