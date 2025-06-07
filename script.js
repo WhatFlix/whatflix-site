@@ -1,4 +1,3 @@
-// Firebase + Auth + Fixes to show/hide nav buttons and auto-create user docs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import {
   getAuth,
@@ -39,12 +38,7 @@ const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
-// DOM references
-const profileBtn = document.getElementById("profile-btn");
-const signOutBtn = document.getElementById("signout-btn");
-const navButtons = document.getElementById("nav-buttons");
-
-// DOM elements (as before)
+// DOM elements
 const poster = document.getElementById("poster");
 const title = document.getElementById("title");
 const overview = document.getElementById("overview");
@@ -58,6 +52,8 @@ const authSection = document.getElementById("auth-section");
 const appSection = document.getElementById("app-section");
 const signUpForm = document.getElementById("signup-form");
 const signInForm = document.getElementById("signin-form");
+const signOutBtn = document.getElementById("signout-btn");
+const profileBtn = document.getElementById("profile-btn");
 const closeProfileBtn = document.getElementById("close-profile");
 const profileSection = document.getElementById("profile-section");
 const profileUsername = document.getElementById("profile-username");
@@ -67,6 +63,7 @@ const searchInput = document.getElementById("search-input");
 const genreFilter = document.getElementById("genre-filter");
 const ratingFilter = document.getElementById("rating-filter");
 const mediaTypeSelect = document.getElementById("media-type");
+const netflixToggle = document.getElementById("netflix-toggle");
 
 let currentUser = null;
 let movieQueue = [];
@@ -103,19 +100,12 @@ function filterMovie(movie) {
          (movie.vote_average >= minRating);
 }
 
-async function showNextMovie() {
-  if (movieQueue.length === 0) {
-    title.innerText = "No more results!";
-    poster.src = "";
-    overview.innerText = "";
-    return;
-  }
-  const movie = movieQueue.shift();
-  const isOnNetflix = await checkNetflixAvailability(movie.id, mediaTypeSelect.value);
-  if (!isOnNetflix) return showNextMovie();
-  title.innerText = movie.title || movie.name;
-  poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "fallback.jpg";
-  overview.innerText = movie.overview;
+async function searchMovieOrShow(query) {
+  const type = mediaTypeSelect.value;
+  const res = await fetch(`${TMDB_BASE_URL}/search/${type}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&region=GB`);
+  const data = await res.json();
+  movieQueue = data.results.filter(m => filterMovie(m));
+  showNextMovie();
 }
 
 async function checkNetflixAvailability(id, type) {
@@ -125,10 +115,30 @@ async function checkNetflixAvailability(id, type) {
   return providers.some(p => p.provider_name === "Netflix");
 }
 
+async function showNextMovie() {
+  if (movieQueue.length === 0) {
+    title.innerText = "No more results!";
+    poster.src = "";
+    overview.innerText = "";
+    return;
+  }
+
+  const movie = movieQueue.shift();
+
+  if (netflixToggle.checked) {
+    const isOnNetflix = await checkNetflixAvailability(movie.id, mediaTypeSelect.value);
+    if (!isOnNetflix) return showNextMovie();
+  }
+
+  title.innerText = movie.title || movie.name;
+  poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "fallback.jpg";
+  overview.innerText = movie.overview;
+}
+
 async function saveToWatchlist(movie) {
   if (!currentUser) return;
-  const ref = doc(db, "users", currentUser.uid);
-  await setDoc(ref, { watchlist: arrayUnion(movie) }, { merge: true });
+  const userDocRef = doc(db, "users", currentUser.uid);
+  await setDoc(userDocRef, { watchlist: arrayUnion(movie) }, { merge: true });
   loadWatchlist();
 }
 
@@ -156,24 +166,67 @@ mediaTypeSelect.addEventListener("change", () => {
   fetchPopular();
 });
 
-async function searchMovieOrShow(query) {
-  const type = mediaTypeSelect.value;
-  const res = await fetch(`${TMDB_BASE_URL}/search/${type}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(query)}&region=GB`);
-  const data = await res.json();
-  movieQueue = data.results.filter(m => filterMovie(m));
-  showNextMovie();
-}
-
 async function loadWatchlist() {
   if (!currentUser) return;
-  const ref = doc(db, "users", currentUser.uid);
-  const snap = await getDoc(ref);
-  const movies = snap.exists() ? snap.data().watchlist || [] : [];
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  const movies = userDoc.exists() ? userDoc.data().watchlist || [] : [];
   watchlistContainer.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
   profileWatchlist.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
+  loadFriendsWatchlist();
 }
 
-// Auto-create user doc if it doesn't exist
+friendSearch.addEventListener("input", async () => {
+  const term = friendSearch.value.trim().toLowerCase();
+  friendResults.innerHTML = "";
+  if (!term || !currentUser) return;
+
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("username", ">=", term), where("username", "<=", term + "\uf8ff"));
+  const snapshot = await getDocs(q);
+  const currentUserData = (await getDoc(doc(db, "users", currentUser.uid))).data();
+  const following = currentUserData?.following || [];
+
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    if (docSnap.id !== currentUser.uid) {
+      const li = document.createElement("li");
+      li.textContent = data.username || "(no username)";
+      const btn = document.createElement("button");
+      btn.className = "follow-btn";
+      btn.textContent = following.includes(docSnap.id) ? "Unfollow" : "Follow";
+      btn.onclick = async () => {
+        const action = following.includes(docSnap.id) ? arrayRemove : arrayUnion;
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          following: action(docSnap.id)
+        });
+        friendSearch.dispatchEvent(new Event("input"));
+        loadFriendsWatchlist();
+      };
+      li.appendChild(btn);
+      friendResults.appendChild(li);
+    }
+  });
+});
+
+async function loadFriendsWatchlist() {
+  if (!currentUser) return;
+  const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+  const following = userSnap.data()?.following || [];
+  let all = [];
+
+  for (const friendId of following) {
+    const friendSnap = await getDoc(doc(db, "users", friendId));
+    const friend = friendSnap.data();
+    if (friend?.watchlist?.length) {
+      friend.watchlist.forEach(movie => {
+        all.push(`<li>${movie.title || movie.name} <span style="color:#888;">(${friend.username})</span></li>`);
+      });
+    }
+  }
+
+  friendsWatchlist.innerHTML = all.join("") || "<li>No picks from friends yet.</li>";
+}
+
 async function ensureUserDoc(user) {
   const ref = doc(db, "users", user.uid);
   const snap = await getDoc(ref);
@@ -187,30 +240,13 @@ async function ensureUserDoc(user) {
   }
 }
 
-// Profile panel
-profileBtn.addEventListener("click", async () => {
-  if (!currentUser) return;
-  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-  const userData = userDoc.data();
-  profileUsername.innerText = userData?.username || "(no username yet)";
-  profileEmail.innerText = userData?.email || "Unknown";
-  loadWatchlist();
-  appSection.style.display = "none";
-  profileSection.style.display = "block";
-});
-
-closeProfileBtn.addEventListener("click", () => {
-  profileSection.style.display = "none";
-  appSection.style.display = "block";
-});
-
-// Auth events
 signUpForm.addEventListener("submit", async e => {
   e.preventDefault();
   const usernameInput = signUpForm["signup-username"];
   const username = usernameInput ? usernameInput.value.trim() : null;
   const email = signUpForm["signup-email"].value;
   const password = signUpForm["signup-password"].value;
+
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, password);
     const uid = userCred.user.uid;
@@ -236,11 +272,28 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
+profileBtn.addEventListener("click", async () => {
+  if (!currentUser) return;
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  const userData = userDoc.data();
+  profileUsername.innerText = userData?.username || "(no username yet)";
+  profileEmail.innerText = userData?.email || "Unknown";
+  loadWatchlist();
+  appSection.style.display = "none";
+  profileSection.style.display = "block";
+});
+
+closeProfileBtn.addEventListener("click", () => {
+  profileSection.style.display = "none";
+  appSection.style.display = "block";
+});
+
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   authSection.style.display = user ? "none" : "block";
   appSection.style.display = user ? "block" : "none";
   profileSection.style.display = "none";
+  const navButtons = document.getElementById("nav-buttons");
   if (navButtons) navButtons.style.visibility = user ? "visible" : "hidden";
   if (user) {
     await ensureUserDoc(user);
