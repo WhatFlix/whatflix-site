@@ -11,7 +11,6 @@ body {
   padding: 20px;
 }
 
-/* Logo and tagline */
 .logo-container {
   text-align: center;
   margin-top: 1rem;
@@ -30,7 +29,6 @@ body {
   margin-bottom: 20px;
 }
 
-/* Navbar */
 .navbar {
   max-width: 500px;
   margin: 0 auto 20px;
@@ -45,7 +43,7 @@ body {
 .nav-buttons {
   display: flex;
   gap: 10px;
-  visibility: hidden; /* hidden by default */
+  visibility: hidden;
 }
 
 #profile-btn,
@@ -64,7 +62,6 @@ body {
   background-color: #f40612;
 }
 
-/* Auth + App Sections */
 #auth-section,
 #app-section {
   max-width: 500px;
@@ -140,6 +137,7 @@ button:hover {
     justify-content: space-between;
     flex-wrap: wrap;
   }
+
   .controls input,
   .controls select {
     flex: 1;
@@ -147,7 +145,10 @@ button:hover {
   }
 }
 
-/* Movie Card */
+#netflix-toggle {
+  transform: scale(1.2);
+}
+
 #movie-card {
   background: #1f1f1f;
   border-radius: 8px;
@@ -173,7 +174,6 @@ button:hover {
   color: #ccc;
 }
 
-/* Swipe Buttons */
 .swipe-buttons {
   display: flex;
   justify-content: center;
@@ -197,14 +197,15 @@ button:hover {
   color: white;
 }
 
-/* Watchlist */
-#watchlist {
+#watchlist,
+#friends-watchlist {
   margin-top: 20px;
   list-style: none;
   padding: 0;
 }
 
-#watchlist li {
+#watchlist li,
+#friends-watchlist li {
   background: #333;
   padding: 10px;
   margin-bottom: 8px;
@@ -212,7 +213,6 @@ button:hover {
   font-size: 0.95rem;
 }
 
-/* Profile Section */
 #profile-section {
   max-width: 500px;
   margin: 0 auto;
@@ -234,7 +234,6 @@ button:hover {
   border-radius: 4px;
 }
 
-/* Friends Section */
 .friends-section {
   margin-top: 30px;
 }
@@ -254,14 +253,12 @@ button:hover {
   font-size: 1rem;
 }
 
-#friend-results,
-#friends-watchlist {
+#friend-results {
   list-style: none;
   padding: 0;
 }
 
-#friend-results li,
-#friends-watchlist li {
+#friend-results li {
   background: #333;
   margin-bottom: 8px;
   padding: 10px;
