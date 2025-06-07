@@ -44,12 +44,20 @@ const appSection = document.getElementById("app-section");
 const signUpForm = document.getElementById("signup-form");
 const signInForm = document.getElementById("signin-form");
 const signOutBtn = document.getElementById("signout-btn");
+const profileBtn = document.getElementById("profile-btn");
+const closeProfileBtn = document.getElementById("close-profile");
+const profileSection = document.getElementById("profile-section");
+const profileUsername = document.getElementById("profile-username");
+const profileEmail = document.getElementById("profile-email");
+const profileWatchlist = document.getElementById("profile-watchlist");
+
 const searchInput = document.getElementById("search-input");
 const genreFilter = document.getElementById("genre-filter");
 const ratingFilter = document.getElementById("rating-filter");
 const mediaTypeSelect = document.getElementById("media-type");
 
 let currentUser = null;
+let currentUsername = null;
 let movieQueue = [];
 let genres = {};
 
@@ -117,25 +125,36 @@ async function checkNetflixAvailability(id, type) {
 
 async function saveToWatchlist(movie) {
   if (!currentUser) return;
-  const userDocRef = doc(db, "watchlists", currentUser.uid);
-  await setDoc(userDocRef, { movies: arrayUnion(movie) }, { merge: true });
+  const userDocRef = doc(db, "users", currentUser.uid);
+  await setDoc(userDocRef, { watchlist: arrayUnion(movie) }, { merge: true });
   loadWatchlist();
-  showNextMovie();
 }
 
 async function loadWatchlist() {
   if (!currentUser) return;
-  const userDoc = await getDoc(doc(db, "watchlists", currentUser.uid));
-  const movies = userDoc.exists() ? userDoc.data().movies || [] : [];
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  const movies = userDoc.exists() ? userDoc.data().watchlist || [] : [];
   watchlistContainer.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
+  profileWatchlist.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
 }
 
-// Auth events
-signUpForm.addEventListener("submit", e => {
+// Auth + User creation
+signUpForm.addEventListener("submit", async e => {
   e.preventDefault();
+  const username = signUpForm["signup-username"].value.trim();
   const email = signUpForm["signup-email"].value;
   const password = signUpForm["signup-password"].value;
-  createUserWithEmailAndPassword(auth, email, password).catch(console.error);
+  try {
+    const userCred = await createUserWithEmailAndPassword(auth, email, password);
+    const uid = userCred.user.uid;
+    await setDoc(doc(db, "users", uid), {
+      username,
+      email,
+      watchlist: []
+    });
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 signInForm.addEventListener("submit", e => {
@@ -149,7 +168,7 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
-// Swipe buttons
+// Buttons
 likeBtn.addEventListener("click", () => {
   saveToWatchlist({
     title: title.innerText,
@@ -160,7 +179,6 @@ likeBtn.addEventListener("click", () => {
 
 dislikeBtn.addEventListener("click", showNextMovie);
 
-// Search and filters
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.trim();
   if (query.length > 2) searchMovieOrShow(query);
@@ -174,17 +192,33 @@ mediaTypeSelect.addEventListener("change", () => {
   fetchPopular();
 });
 
-// On user login
-onAuthStateChanged(auth, user => {
+// Profile panel controls
+profileBtn.addEventListener("click", async () => {
+  if (!currentUser) return;
+  const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  const userData = userDoc.data();
+  profileUsername.innerText = userData.username || "Unknown";
+  profileEmail.innerText = userData.email;
+  loadWatchlist();
+  appSection.style.display = "none";
+  profileSection.style.display = "block";
+});
+
+closeProfileBtn.addEventListener("click", () => {
+  profileSection.style.display = "none";
+  appSection.style.display = "block";
+});
+
+// Auth change listener
+onAuthStateChanged(auth, async user => {
   currentUser = user;
   authSection.style.display = user ? "none" : "block";
   appSection.style.display = user ? "block" : "none";
-  if (signOutBtn) {
-    signOutBtn.style.display = user ? "inline-block" : "none";
-  }
+  profileSection.style.display = "none";
+  if (signOutBtn) signOutBtn.style.display = user ? "inline-block" : "none";
   if (user) {
-    fetchGenres();
-    fetchPopular();
+    await fetchGenres();
+    await fetchPopular();
     loadWatchlist();
   }
 });
