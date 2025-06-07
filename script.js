@@ -11,7 +11,13 @@ import {
   doc,
   getDoc,
   setDoc,
-  arrayUnion
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  collection,
+  getDocs,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -32,13 +38,16 @@ const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
 
-// DOM elements
+// DOM
 const poster = document.getElementById("poster");
 const title = document.getElementById("title");
 const overview = document.getElementById("overview");
 const likeBtn = document.getElementById("like");
 const dislikeBtn = document.getElementById("dislike");
 const watchlistContainer = document.getElementById("watchlist");
+const friendsWatchlist = document.getElementById("friends-watchlist");
+const friendSearch = document.getElementById("friend-search");
+const friendResults = document.getElementById("friend-results");
 const authSection = document.getElementById("auth-section");
 const appSection = document.getElementById("app-section");
 const signUpForm = document.getElementById("signup-form");
@@ -50,7 +59,6 @@ const profileSection = document.getElementById("profile-section");
 const profileUsername = document.getElementById("profile-username");
 const profileEmail = document.getElementById("profile-email");
 const profileWatchlist = document.getElementById("profile-watchlist");
-
 const searchInput = document.getElementById("search-input");
 const genreFilter = document.getElementById("genre-filter");
 const ratingFilter = document.getElementById("rating-filter");
@@ -135,9 +143,64 @@ async function loadWatchlist() {
   const movies = userDoc.exists() ? userDoc.data().watchlist || [] : [];
   watchlistContainer.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
   profileWatchlist.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
+  loadFriendsWatchlist();
 }
 
-// Sign Up — username optional
+// 🔍 FRIEND SEARCH
+friendSearch.addEventListener("input", async () => {
+  const term = friendSearch.value.trim().toLowerCase();
+  friendResults.innerHTML = "";
+  if (!term || !currentUser) return;
+
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("username", ">=", term), where("username", "<=", term + "\uf8ff"));
+  const snapshot = await getDocs(q);
+  const currentUserData = (await getDoc(doc(db, "users", currentUser.uid))).data();
+  const following = currentUserData?.following || [];
+
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    if (docSnap.id !== currentUser.uid) {
+      const li = document.createElement("li");
+      li.textContent = data.username || "(no username)";
+      const btn = document.createElement("button");
+      btn.className = "follow-btn";
+      btn.textContent = following.includes(docSnap.id) ? "Unfollow" : "Follow";
+      btn.onclick = async () => {
+        const action = following.includes(docSnap.id) ? arrayRemove : arrayUnion;
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          following: action(docSnap.id)
+        });
+        friendSearch.dispatchEvent(new Event("input")); // refresh list
+        loadFriendsWatchlist();
+      };
+      li.appendChild(btn);
+      friendResults.appendChild(li);
+    }
+  });
+});
+
+// 📥 FRIENDS' WATCHLISTS
+async function loadFriendsWatchlist() {
+  if (!currentUser) return;
+  const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+  const following = userSnap.data()?.following || [];
+  let all = [];
+
+  for (const friendId of following) {
+    const friendSnap = await getDoc(doc(db, "users", friendId));
+    const friend = friendSnap.data();
+    if (friend?.watchlist?.length) {
+      friend.watchlist.forEach(movie => {
+        all.push(`<li>${movie.title || movie.name} <span style="color:#888;">(${friend.username})</span></li>`);
+      });
+    }
+  }
+
+  friendsWatchlist.innerHTML = all.join("") || "<li>No picks from friends yet.</li>";
+}
+
+// 👤 Sign Up — username optional
 signUpForm.addEventListener("submit", async e => {
   e.preventDefault();
   const usernameInput = signUpForm["signup-username"];
@@ -151,13 +214,15 @@ signUpForm.addEventListener("submit", async e => {
     await setDoc(doc(db, "users", uid), {
       username: username || null,
       email,
-      watchlist: []
+      watchlist: [],
+      following: []
     });
   } catch (err) {
     console.error(err);
   }
 });
 
+// 🔐 Login/Logout
 signInForm.addEventListener("submit", e => {
   e.preventDefault();
   const email = signInForm["signin-email"].value;
@@ -169,6 +234,7 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
+// 🖱️ Buttons
 likeBtn.addEventListener("click", () => {
   saveToWatchlist({
     title: title.innerText,
@@ -192,7 +258,7 @@ mediaTypeSelect.addEventListener("change", () => {
   fetchPopular();
 });
 
-// Profile panel
+// 👤 Profile panel
 profileBtn.addEventListener("click", async () => {
   if (!currentUser) return;
   const userDoc = await getDoc(doc(db, "users", currentUser.uid));
@@ -209,6 +275,7 @@ closeProfileBtn.addEventListener("click", () => {
   appSection.style.display = "block";
 });
 
+// 🧠 Init
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   authSection.style.display = user ? "none" : "block";
