@@ -236,11 +236,20 @@ signOutBtn.addEventListener("click", () => {
 
 // 🖱️ Buttons
 likeBtn.addEventListener("click", () => {
-  saveToWatchlist({
+  const movie = {
     title: title.innerText,
-    poster_path: poster.src,
     overview: overview.innerText
-  });
+  };
+
+  // Rebuild TMDB-style path from full URL
+  if (poster.src.includes("/w500/")) {
+    const split = poster.src.split("/w500/");
+    movie.poster_path = "/w500/" + split[1];
+  } else {
+    movie.poster_path = null;
+  }
+
+  saveToWatchlist(movie);
 });
 
 dislikeBtn.addEventListener("click", showNextMovie);
