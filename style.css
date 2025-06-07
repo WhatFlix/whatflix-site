@@ -1,7 +1,5 @@
 /* Reset and base styles */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -37,21 +35,17 @@ body {
   max-width: 500px;
   margin: 0 auto 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   background: #1f1f1f;
   padding: 10px 20px;
   border-radius: 8px;
 }
 
-.navbar h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
 .nav-buttons {
   display: flex;
   gap: 10px;
+  visibility: hidden; /* hidden by default */
 }
 
 #profile-btn,
@@ -78,7 +72,6 @@ body {
   padding: 10px;
 }
 
-/* Forms */
 form {
   background: #1f1f1f;
   padding: 15px;
@@ -120,7 +113,6 @@ button:hover {
   background-color: #f40612;
 }
 
-/* Controls for filters/search */
 .controls {
   display: flex;
   flex-direction: column;
@@ -148,7 +140,6 @@ button:hover {
     justify-content: space-between;
     flex-wrap: wrap;
   }
-
   .controls input,
   .controls select {
     flex: 1;
