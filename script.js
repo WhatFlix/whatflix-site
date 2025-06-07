@@ -1,7 +1,18 @@
-// Firebase and TMDB imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  arrayUnion
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
@@ -56,9 +67,13 @@ async function fetchGenres() {
 
 async function fetchPopular() {
   const type = mediaTypeSelect.value;
-  const res = await fetch(`${TMDB_BASE_URL}/${type}/popular?api_key=${TMDB_API_KEY}&region=GB`);
-  const data = await res.json();
-  movieQueue = data.results.filter(m => filterMovie(m));
+  let combined = [];
+  for (let page = 1; page <= 3; page++) {
+    const res = await fetch(`${TMDB_BASE_URL}/${type}/popular?api_key=${TMDB_API_KEY}&region=GB&page=${page}`);
+    const data = await res.json();
+    combined = combined.concat(data.results.filter(m => filterMovie(m)));
+  }
+  movieQueue = combined;
   showNextMovie();
 }
 
@@ -164,6 +179,9 @@ onAuthStateChanged(auth, user => {
   currentUser = user;
   authSection.style.display = user ? "none" : "block";
   appSection.style.display = user ? "block" : "none";
+  if (signOutBtn) {
+    signOutBtn.style.display = user ? "inline-block" : "none";
+  }
   if (user) {
     fetchGenres();
     fetchPopular();
