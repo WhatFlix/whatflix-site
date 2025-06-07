@@ -57,7 +57,6 @@ const ratingFilter = document.getElementById("rating-filter");
 const mediaTypeSelect = document.getElementById("media-type");
 
 let currentUser = null;
-let currentUsername = null;
 let movieQueue = [];
 let genres = {};
 
@@ -138,17 +137,19 @@ async function loadWatchlist() {
   profileWatchlist.innerHTML = movies.map(m => `<li>${m.title || m.name}</li>`).join("");
 }
 
-// Auth + User creation
+// Sign Up — username optional
 signUpForm.addEventListener("submit", async e => {
   e.preventDefault();
-  const username = signUpForm["signup-username"].value.trim();
+  const usernameInput = signUpForm["signup-username"];
+  const username = usernameInput ? usernameInput.value.trim() : null;
   const email = signUpForm["signup-email"].value;
   const password = signUpForm["signup-password"].value;
+
   try {
     const userCred = await createUserWithEmailAndPassword(auth, email, password);
     const uid = userCred.user.uid;
     await setDoc(doc(db, "users", uid), {
-      username,
+      username: username || null,
       email,
       watchlist: []
     });
@@ -168,7 +169,6 @@ signOutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
-// Buttons
 likeBtn.addEventListener("click", () => {
   saveToWatchlist({
     title: title.innerText,
@@ -192,13 +192,13 @@ mediaTypeSelect.addEventListener("change", () => {
   fetchPopular();
 });
 
-// Profile panel controls
+// Profile panel
 profileBtn.addEventListener("click", async () => {
   if (!currentUser) return;
   const userDoc = await getDoc(doc(db, "users", currentUser.uid));
   const userData = userDoc.data();
-  profileUsername.innerText = userData.username || "Unknown";
-  profileEmail.innerText = userData.email;
+  profileUsername.innerText = userData?.username || "(no username yet)";
+  profileEmail.innerText = userData?.email || "Unknown";
   loadWatchlist();
   appSection.style.display = "none";
   profileSection.style.display = "block";
@@ -209,7 +209,6 @@ closeProfileBtn.addEventListener("click", () => {
   appSection.style.display = "block";
 });
 
-// Auth change listener
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   authSection.style.display = user ? "none" : "block";
