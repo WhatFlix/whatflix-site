@@ -1,5 +1,3 @@
-// script.js - Enhanced WhatFlix Experience with Dashboard and Genres
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
 import {
   getAuth,
