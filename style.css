@@ -64,6 +64,7 @@ button {
   color: white;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
@@ -120,6 +121,7 @@ button:hover {
   color: white;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .tab-button.active,
@@ -143,4 +145,17 @@ button:hover {
   padding: 8px;
   border-bottom: 1px solid #333;
   color: #ccc;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #dashboard-container {
+    flex-direction: column;
+  }
+
+  #movie-card,
+  #watchlist {
+    flex: none;
+    max-width: 100%;
+  }
 }
