@@ -1,89 +1,115 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #121212;
-  color: #fff;
-  margin: 0;
-  padding: 20px;
-}
 
-.logo-container {
-  background: #1f1f1f;
-  padding: 20px 0;
-  text-align: center;
-  border-bottom: 2px solid #e50914;
-  margin-bottom: 20px;
-}
+font-family: Arial, sans-serif;
 
-.logo {
-  max-width: 150px;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  cursor: pointer;
+background: #121212;
+
+color: #fff;
+
+margin: 0;
+
+padding: 20px;
+
 }
 
 #auth-section, #app-section {
-  max-width: 400px;
-  margin: 0 auto;
+
+max-width: 400px;
+
+margin: 0 auto;
+
 }
 
 form {
-  background: #1f1f1f;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 6px;
+
+background: #1f1f1f;
+
+padding: 15px;
+
+margin-bottom: 15px;
+
+border-radius: 6px;
+
 }
 
 input {
-  display: block;
-  width: 95%;
-  padding: 8px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
+
+display: block;
+
+width: 95%;
+
+padding: 8px;
+
+margin: 8px 0;
+
+border: none;
+
+border-radius: 4px;
+
 }
 
 button {
-  padding: 10px 20px;
-  background-color: #e50914;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  cursor: pointer;
+
+padding: 10px 20px;
+
+background-color: #e50914;
+
+border: none;
+
+border-radius: 4px;
+
+color: white;
+
+cursor: pointer;
+
 }
 
 button:hover {
-  background-color: #f40612;
+
+background-color: #f40612;
+
 }
 
 #movie-card {
-  background: #1f1f1f;
-  border-radius: 8px;
-  padding: 20px;
-  text-align: center;
-  margin-top: 30px;
+
+background: #1f1f1f;
+
+border-radius: 8px;
+
+padding: 20px;
+
+text-align: center;
+
+margin-top: 30px;
+
 }
 
 #poster {
-  max-width: 100%;
-  border-radius: 8px;
-  opacity: 0;
-  transition: opacity 0.4s ease-in-out;
-}
 
-#poster.fade-in {
-  opacity: 1;
+max-width: 100%;
+
+border-radius: 8px;
+
 }
 
 #watchlist {
-  margin-top: 20px;
-  list-style-type: none;
-  padding-left: 0;
+
+margin-top: 20px;
+
+list-style-type: none;
+
+padding-left: 0;
+
 }
 
 #watchlist li {
-  background: #282828;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 4px;
+
+background: #282828;
+
+margin: 5px 0;
+
+padding: 10px;
+
+border-radius: 4px;
+
 }
