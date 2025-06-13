@@ -56,6 +56,27 @@ const moodSelect = document.getElementById("mood-select");
 
 let currentUser = null;
 let movieQueue = [];
+signInForm.addEventListener("submit", async e => {
+  e.preventDefault();
+
+  // Grab inputs by ID — safer and more explicit
+  const email = document.getElementById("signin-email").value.trim();
+  const password = document.getElementById("signin-password").value;
+
+  if (!email || !password) {
+    alert("Please enter both email and password.");
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    signInForm.reset();
+    console.log("Sign-in successful");
+  } catch (error) {
+    console.error("Sign In Error:", error);
+    alert("Sign In Error: " + error.message);
+  }
+});
 
 // Helper: Fetch movies by mood/genre
 async function fetchMovies(mood = "popular") {
