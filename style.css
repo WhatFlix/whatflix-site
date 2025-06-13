@@ -67,6 +67,12 @@ button:hover {
 #poster {
   max-width: 100%;
   border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.4s ease-in-out;
+}
+
+#poster.fade-in {
+  opacity: 1;
 }
 
 #watchlist {
