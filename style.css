@@ -9,192 +9,124 @@ body {
 
 nav {
   background: #1f1f1f;
-  padding: 20px 30px;
+  padding: 15px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 2px solid #333;
 }
 
-.logo-link svg {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.logo-link svg:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 6px #e50914);
-}
-
-.nav-links {
+.logo-container {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 12px;
 }
 
-.nav-btn {
-  background: #e50914;
+#logo {
+  width: 36px;
+  height: 36px;
+}
+
+nav h1 {
+  margin: 0;
+  color: #e50914;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.nav-links button {
+  background: transparent;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  color: white;
   cursor: pointer;
   font-weight: 600;
-  color: #fff;
+  margin-left: 15px;
+  padding: 6px 12px;
+  border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.nav-btn:hover {
-  background: #f40612;
+.nav-links button:hover {
+  background-color: #e50914;
+  color: #fff;
 }
 
 main {
-  max-width: 900px;
-  margin: 20px auto;
+  max-width: 960px;
+  margin: 30px auto;
   padding: 0 20px;
-}
-
-#auth-section {
-  max-width: 400px;
-  margin: 40px auto;
 }
 
 .auth-form {
   background: #1f1f1f;
-  padding: 25px 20px;
+  padding: 25px;
   border-radius: 10px;
-  box-shadow: 0 0 12px #e5091477;
+  max-width: 400px;
+  margin: 0 auto 30px auto;
+  box-shadow: 0 0 10px rgba(229, 9, 20, 0.4);
 }
 
 .auth-form h3 {
-  margin-top: 0;
   margin-bottom: 15px;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #e50914;
 }
 
 .auth-form input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  background: #333;
+  padding: 12px 15px;
+  margin-top: 15px;
+  border-radius: 6px;
   border: none;
-  border-radius: 5px;
-  color: #fff;
+  background: #333;
+  color: white;
   font-size: 1rem;
 }
 
 .auth-form button {
   width: 100%;
-  background: #e50914;
-  border: none;
-  padding: 12px;
+  margin-top: 25px;
+  background-color: #e50914;
   font-weight: 700;
   font-size: 1.1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .auth-form button:hover {
-  background: #f40612;
+  background-color: #f40612;
 }
 
+/* Dashboard layout */
 #dashboard-container {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: flex-start;
 }
 
-#movie-card {
-  flex: 2;
-  background: #1f1f1f;
-  padding: 25px 30px;
-  border-radius: 12px;
-  text-align: center;
-  box-shadow: 0 0 20px #e5091466;
-  min-width: 300px;
-}
-
-#poster {
-  max-width: 100%;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 12px #e50914cc;
-}
-
-#title {
-  margin: 0 0 15px;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-#overview {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  color: #ccc;
-  min-height: 90px;
-}
-
-.actions {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.actions button {
-  background: #e50914;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.actions button:hover {
-  background: #f40612;
-}
-
-#mood-filter {
-  margin-top: 15px;
-  color: #fff;
-  font-weight: 600;
-}
-
-#mood-select {
-  margin-left: 10px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
-  background: #333;
-  color: white;
-  cursor: pointer;
-}
-
-aside {
+/* Watchlist */
+#watchlist-container {
   flex: 1;
   background: #1f1f1f;
-  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 0 20px #e5091466;
-  max-height: 540px;
+  border-radius: 12px;
+  max-height: 600px;
   overflow-y: auto;
-  min-width: 220px;
+  min-width: 280px;
 }
 
-aside h3 {
+#watchlist-container h3 {
   margin-top: 0;
   font-weight: 700;
-  margin-bottom: 15px;
+  color: #e50914;
+  text-align: center;
 }
 
 #watchlist {
   list-style: none;
   padding-left: 0;
-  margin: 0;
+  margin-top: 15px;
 }
 
 #watchlist li {
@@ -203,55 +135,104 @@ aside h3 {
   margin-bottom: 12px;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
+  cursor: default;
   transition: background-color 0.3s ease;
 }
 
 #watchlist li:hover {
-  background: #e50914;
-  color: white;
+  background-color: #3e0c0c;
 }
 
-.friend-activity {
+/* Movie Card */
+#movie-card {
+  flex: 2;
   background: #1f1f1f;
-  padding: 25px 30px;
-  margin-top: 40px;
   border-radius: 12px;
-  box-shadow: 0 0 20px #e5091466;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 25px;
+  max-width: 600px;
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.3);
+  text-align: center;
 }
 
-.friend-activity h3 {
+#poster {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+
+#title {
   margin-top: 0;
+  margin-bottom: 12px;
   font-weight: 700;
-  margin-bottom: 15px;
+  font-size: 2rem;
+  color: #e50914;
 }
 
-.friend-activity ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  color: #bbb;
-  font-style: italic;
+#overview {
+  font-size: 1rem;
+  color: #ccc;
+  min-height: 80px;
+  margin-bottom: 25px;
+  line-height: 1.3;
 }
 
-.friend-activity li {
-  padding: 8px 0;
-  border-bottom: 1px solid #333;
+/* Mood select */
+.mood-select-container {
+  margin-bottom: 20px;
+  text-align: left;
+  font-weight: 600;
+  color: #e50914;
 }
 
-@media (max-width: 700px) {
+.mood-select-container label {
+  margin-right: 12px;
+  font-size: 1rem;
+}
+
+#mood-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #333;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Buttons */
+.buttons-row {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.like-btn,
+.dislike-btn {
+  background-color: #e50914;
+  border: none;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.6);
+  transition: background-color 0.3s ease;
+}
+
+.like-btn:hover,
+.dislike-btn:hover {
+  background-color: #f40612;
+}
+
+@media (max-width: 900px) {
   #dashboard-container {
     flex-direction: column;
+    align-items: center;
   }
-  aside {
-    max-height: 300px;
-    min-width: 100%;
-  }
-  #movie-card {
-    min-width: 100%;
+
+  #movie-card, #watchlist-container {
+    max-width: 100%;
   }
 }
