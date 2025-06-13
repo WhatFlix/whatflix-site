@@ -1,58 +1,82 @@
-// WhatFlix Mini Auth Test
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatFlix – the social movie site</title>
+  <link rel="stylesheet" href="style.css" />  <!-- 👇 Social Sharing (Open Graph Tags) -->  <meta property="og:title" content="WhatFlix – the social movie site" />
+  <meta property="og:description" content="Find what to watch next based on what your friends are watching." />
+  <meta property="og:image" content="https://whatflix.net/assets/whatflix-share.jpg" />
+  <meta property="og:url" content="https://whatflix.net/" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <div class="logo-container">
+    <img src="assets/whatflix-logo.png" alt="WhatFlix Logo" class="logo" />
+    <h2 class="tagline">WhatFlix – the social movie site</h2>
+  </div>  <div class="navbar">
+    <div class="nav-buttons" id="nav-buttons">
+      <button id="profile-btn">View Profile</button>
+      <button id="signout-btn">Sign Out</button>
+    </div>
+  </div>  <div id="auth-section">
+    <form id="signup-form">
+      <input type="text" id="signup-username" placeholder="Username (optional)" />
+      <input type="email" id="signup-email" placeholder="Email" required />
+      <input type="password" id="signup-password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form><form id="signin-form">
+  <input type="email" id="signin-email" placeholder="Email" required />
+  <input type="password" id="signin-password" placeholder="Password" required />
+  <button type="submit">Sign In</button>
+</form>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
-  authDomain: "whatflix-a17fb.firebaseapp.com",
-  projectId: "whatflix-a17fb",
-  storageBucket: "whatflix-a17fb.appspot.com",
-  messagingSenderId: "369819362727",
-  appId: "1:369819362727:web:b55af0726c7b29b8e9c282"
-};
+  </div>  <div id="app-section" style="display:none;">
+    <div class="controls">
+      <input type="text" id="search-input" placeholder="Search movies or shows..." />
+      <select id="genre-filter"><option value="">All Genres</option></select>
+      <select id="rating-filter">
+        <option value="0">All Ratings</option>
+        <option value="5">5+</option>
+        <option value="6">6+</option>
+        <option value="7">7+</option>
+        <option value="8">8+</option>
+      </select>
+      <select id="media-type">
+        <option value="movie">Movies</option>
+        <option value="tv">TV Shows</option>
+      </select>
+      <label style="margin-top:10px; display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="netflix-toggle" checked />
+        Only show on Netflix UK
+      </label>
+    </div><div id="movie-card">
+  <img id="poster" src="assets/fallback.jpg" alt="Movie Poster" />
+  <h2 id="title"></h2>
+  <p id="overview"></p>
+  <div class="swipe-buttons">
+    <button id="like">👍</button>
+    <button id="dislike">👎</button>
+  </div>
+</div>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+<h3>Your Watchlist</h3>
+<ul id="watchlist"></ul>
 
-const signUpForm = document.getElementById("signup-form");
-const signInForm = document.getElementById("signin-form");
-const statusMessage = document.getElementById("status-message");
+<div class="friends-section">
+  <h3>Find Friends</h3>
+  <input type="text" id="friend-search" placeholder="Search usernames..." />
+  <ul id="friend-results"></ul>
 
-signUpForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("signup-email").value;
-  const password = document.getElementById("signup-password").value;
+  <h3>Friends’ Picks</h3>
+  <ul id="friends-watchlist"></ul>
+</div>
 
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-    statusMessage.textContent = "✅ Sign up successful. You're now logged in.";
-  } catch (error) {
-    statusMessage.textContent = `❌ Sign up failed: ${error.message}`;
-  }
-});
-
-signInForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("signin-email").value;
-  const password = document.getElementById("signin-password").value;
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    statusMessage.textContent = "✅ Sign in successful. Welcome back!";
-  } catch (error) {
-    statusMessage.textContent = `❌ Sign in failed: ${error.message}`;
-  }
-});
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("Logged in as:", user.email);
-  } else {
-    console.log("Not signed in");
-  }
-});
+  </div>  <div id="profile-section" style="display:none;">
+    <h2>👤 Your Profile</h2>
+    <p><strong>Username:</strong> <span id="profile-username"></span></p>
+    <p><strong>Email:</strong> <span id="profile-email"></span></p>
+    <h3>Your Watchlist</h3>
+    <ul id="profile-watchlist"></ul>
+    <button id="close-profile">Close Profile</button>
+  </div>  <script type="module" src="script.js"></script></body>
+</html>
