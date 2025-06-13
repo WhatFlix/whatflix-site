@@ -1,76 +1,48 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
+<!DOCTYPE html><html lang="en">
 <head>
-
-<meta charset="UTF-8" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
-<img src="assets/whatflix-logo.png" alt="WhatFlix Logo" class="logo" />
-<link rel="stylesheet" href="style.css" />
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatFlix</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Social Sharing Tags -->
+  <meta property="og:title" content="WhatFlix – the social movie site" />
+  <meta property="og:description" content="Find what to watch next based on what your friends are watching." />
+  <meta property="og:image" content="https://whatflix.net/assets/whatflix-logo.png" />
+  <meta property="og:url" content="https://whatflix.net/" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
-
 <body>
-
-<div id="auth-section">
-
-<h1>WhatFlix</h1>
-
-<form id="signup-form">
-
-<h3>Sign Up</h3>
-
-<input type="email" id="signup-email" placeholder="Email" required />
-
-<input type="password" id="signup-password" placeholder="Password" required />
-
-<button type="submit">Sign Up</button>
-
-</form>
-
-<form id="signin-form">
-
-<h3>Sign In</h3>
-
-<input type="email" id="signin-email" placeholder="Email" required />
-
-<input type="password" id="signin-password" placeholder="Password" required />
-
-<button type="submit">Sign In</button>
-
-</form>
-
-</div>
-
-<div id="app-section" style="display:none;">
-
-<button id="signout-btn">Sign Out</button>
-
-<div id="movie-card">
-
-<img id="poster" src="" alt="Movie Poster" />
-
-<h2 id="title"></h2>
-
-<p id="overview"></p>
-
-<button id="like">👍 Like</button>
-
-<button id="dislike">👎 Dislike</button>
-
-</div>
-
-<h3>Your Watchlist</h3>
-
-<ul id="watchlist"></ul>
-
-</div>
-
-<script type="module" src="script.js"></script>
-
+  <div class="logo-container">
+    <a href="index.html">
+      <img src="assets/whatflix-logo.png" alt="WhatFlix Logo" class="logo" />
+    </a>
+  </div>
+  <div id="auth-section">
+    <form id="signup-form">
+      <h3>Sign Up</h3>
+      <input type="email" id="signup-email" placeholder="Email" required />
+      <input type="password" id="signup-password" placeholder="Password" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <form id="signin-form">
+      <h3>Sign In</h3>
+      <input type="email" id="signin-email" placeholder="Email" required />
+      <input type="password" id="signin-password" placeholder="Password" required />
+      <button type="submit">Sign In</button>
+    </form>
+  </div>
+  <div id="app-section" style="display:none;">
+    <button id="signout-btn">Sign Out</button>
+    <div id="movie-card">
+      <img id="poster" src="" alt="Movie Poster" />
+      <h2 id="title"></h2>
+      <p id="overview"></p>
+      <button id="like">👍 Like</button>
+      <button id="dislike">👎 Dislike</button>
+    </div>
+    <h3>Your Watchlist</h3>
+    <ul id="watchlist"></ul>
+  </div>
+  <script type="module" src="script.js"></script>
 </body>
-
 </html>
