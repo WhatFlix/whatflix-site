@@ -120,7 +120,13 @@ if (movieQueue.length === 0) {
 
 title.innerText = "No more movies!";
 
-poster.src = "";
+poster.classList.remove("fade-in");
+poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "";
+poster.onload = () => poster.classList.add("fade-in");
+poster.onerror = () => {
+  poster.src = "fallback.jpg";
+  poster.classList.add("fade-in");
+};
 
 overview.innerText = "";
 
