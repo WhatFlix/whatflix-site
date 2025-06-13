@@ -1,8 +1,10 @@
-/* Base styling */ body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0d0d0d; color: #ffffff; margin: 0; padding: 0; }
+/* Updated WhatFlix CSS Styling */
+
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0d0d0d; color: #ffffff; margin: 0; padding: 0; }
 
 nav { background: #1f1f1f; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; }
 
-nav img.logo { height: 40px; }
+.logo-img { height: 40px; }
 
 .nav-links a { margin-left: 20px; color: #fff; text-decoration: none; font-weight: 500; }
 
