@@ -1,48 +1,437 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+
+<html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WhatFlix</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Social Sharing Tags -->
-  <meta property="og:title" content="WhatFlix – the social movie site" />
-  <meta property="og:description" content="Find what to watch next based on what your friends are watching." />
-  <meta property="og:image" content="https://whatflix.net/assets/whatflix-logo.png" />
-  <meta property="og:url" content="https://whatflix.net/" />
-  <meta name="twitter:card" content="summary_large_image" />
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>WhatFlix</title>
+
+<link rel="stylesheet" href="style.css" />
+
 </head>
+
 <body>
-  <div class="logo-container">
-    <a href="index.html">
-      <img src="assets/whatflix-logo.png" alt="WhatFlix Logo" class="logo" />
-    </a>
-  </div>
-  <div id="auth-section">
-    <form id="signup-form">
-      <h3>Sign Up</h3>
-      <input type="email" id="signup-email" placeholder="Email" required />
-      <input type="password" id="signup-password" placeholder="Password" required />
-      <button type="submit">Sign Up</button>
-    </form>
-    <form id="signin-form">
-      <h3>Sign In</h3>
-      <input type="email" id="signin-email" placeholder="Email" required />
-      <input type="password" id="signin-password" placeholder="Password" required />
-      <button type="submit">Sign In</button>
-    </form>
-  </div>
-  <div id="app-section" style="display:none;">
-    <button id="signout-btn">Sign Out</button>
-    <div id="movie-card">
-      <img id="poster" src="" alt="Movie Poster" />
-      <h2 id="title"></h2>
-      <p id="overview"></p>
-      <button id="like">👍 Like</button>
-      <button id="dislike">👎 Dislike</button>
-    </div>
-    <h3>Your Watchlist</h3>
-    <ul id="watchlist"></ul>
-  </div>
-  <script type="module" src="script.js"></script>
+
+<div id="auth-section">
+
+<h1>WhatFlix</h1>
+
+<form id="signup-form">
+
+<h3>Sign Up</h3>
+
+<input type="email" id="signup-email" placeholder="Email" required />
+
+<input type="password" id="signup-password" placeholder="Password" required />
+
+<button type="submit">Sign Up</button>
+
+</form>
+
+<form id="signin-form">
+
+<h3>Sign In</h3>
+
+<input type="email" id="signin-email" placeholder="Email" required />
+
+<input type="password" id="signin-password" placeholder="Password" required />
+
+<button type="submit">Sign In</button>
+
+</form>
+
+</div>
+
+<div id="app-section" style="display:none;">
+
+<button id="signout-btn">Sign Out</button>
+
+<div id="movie-card">
+
+<img id="poster" src="" alt="Movie Poster" />
+
+<h2 id="title"></h2>
+
+<p id="overview"></p>
+
+<button id="like">👍 Like</button>
+
+<button id="dislike">👎 Dislike</button>
+
+</div>
+
+<h3>Your Watchlist</h3>
+
+<ul id="watchlist"></ul>
+
+</div>
+
+<script type="module" src="script.js"></script>
+
 </body>
+
 </html>
+
+Script.js
+
+// Import Firebase modules
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+
+import {
+
+getAuth,
+
+createUserWithEmailAndPassword,
+
+signInWithEmailAndPassword,
+
+signOut,
+
+onAuthStateChanged
+
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+import {
+
+getFirestore,
+
+doc,
+
+getDoc,
+
+setDoc,
+
+updateDoc,
+
+arrayUnion
+
+} from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+
+// Firebase config (your own config here)
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyCBAgNEOcl7QCmHQy2mJBQbwKSfmRNbRl0",
+
+authDomain: "whatflix-a17fb.firebaseapp.com",
+
+projectId: "whatflix-a17fb",
+
+storageBucket: "whatflix-a17fb.firebasestorage.app",
+
+messagingSenderId: "369819362727",
+
+appId: "1:369819362727:web:b55af0726c7b29b8e9c282",
+
+measurementId: "G-Z6RX0KXLKY"
+
+};
+
+// Initialize Firebase
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+// TMDB API Setup
+
+const TMDB_API_KEY = "406d510b8114c3a454abf556a384a949";
+
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500";
+
+const movieCard = document.getElementById("movie-card");
+
+const poster = document.getElementById("poster");
+
+const title = document.getElementById("title");
+
+const overview = document.getElementById("overview");
+
+const likeBtn = document.getElementById("like");
+
+const dislikeBtn = document.getElementById("dislike");
+
+const watchlistContainer = document.getElementById("watchlist");
+
+const authSection = document.getElementById("auth-section");
+
+const appSection = document.getElementById("app-section");
+
+const signUpForm = document.getElementById("signup-form");
+
+const signInForm = document.getElementById("signin-form");
+
+const signOutBtn = document.getElementById("signout-btn");
+
+let currentUser = null;
+
+let movieQueue = [];
+
+function fetchRandomMovie() {
+
+fetch(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&region=GB`)
+
+.then(res => res.json())
+
+.then(data => {
+
+movieQueue = data.results;
+
+showNextMovie();
+
+})
+
+.catch(err => console.error("Fetch movie error:", err));
+
+}
+
+function showNextMovie() {
+
+if (movieQueue.length === 0) {
+
+title.innerText = "No more movies!";
+
+poster.src = "";
+
+overview.innerText = "";
+
+return;
+
+}
+
+const movie = movieQueue.shift();
+
+title.innerText = movie.title;
+
+poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "";
+
+overview.innerText = movie.overview;
+
+poster.onerror = () => poster.src = "fallback.jpg";
+
+likeBtn.onclick = () => saveToWatchlist(movie);
+
+dislikeBtn.onclick = showNextMovie;
+
+}
+
+async function saveToWatchlist(movie) {
+
+if (!currentUser) return;
+
+const userDocRef = doc(db, "watchlists", currentUser.uid);
+
+try {
+
+await setDoc(userDocRef, { movies: arrayUnion(movie) }, { merge: true });
+
+showNextMovie();
+
+loadWatchlist();
+
+} catch (error) {
+
+console.error("Error saving to watchlist:", error);
+
+}
+
+}
+
+async function loadWatchlist() {
+
+if (!currentUser) return;
+
+try {
+
+const userDoc = await getDoc(doc(db, "watchlists", currentUser.uid));
+
+const movies = userDoc.exists() ? userDoc.data().movies || [] : [];
+
+watchlistContainer.innerHTML = movies.map(m => `<li>${m.title}</li>`).join("");
+
+} catch (error) {
+
+console.error("Error loading watchlist:", error);
+
+}
+
+}
+
+signUpForm.addEventListener("submit", e => {
+
+e.preventDefault();
+
+const email = signUpForm["signup-email"].value;
+
+const password = signUpForm["signup-password"].value;
+
+createUserWithEmailAndPassword(auth, email, password)
+
+.catch(err => alert(err.message));
+
+});
+
+signInForm.addEventListener("submit", e => {
+
+e.preventDefault();
+
+const email = signInForm["signin-email"].value;
+
+const password = signInForm["signin-password"].value;
+
+signInWithEmailAndPassword(auth, email, password)
+
+.catch(err => alert(err.message));
+
+});
+
+signOutBtn.addEventListener("click", () => {
+
+signOut(auth);
+
+});
+
+onAuthStateChanged(auth, user => {
+
+currentUser = user;
+
+authSection.style.display = user ? "none" : "block";
+
+appSection.style.display = user ? "block" : "none";
+
+if (user) {
+
+fetchRandomMovie();
+
+loadWatchlist();
+
+}
+
+});
+
+Style.css
+
+body {
+
+font-family: Arial, sans-serif;
+
+background: #121212;
+
+color: #fff;
+
+margin: 0;
+
+padding: 20px;
+
+}
+
+#auth-section, #app-section {
+
+max-width: 400px;
+
+margin: 0 auto;
+
+}
+
+form {
+
+background: #1f1f1f;
+
+padding: 15px;
+
+margin-bottom: 15px;
+
+border-radius: 6px;
+
+}
+
+input {
+
+display: block;
+
+width: 95%;
+
+padding: 8px;
+
+margin: 8px 0;
+
+border: none;
+
+border-radius: 4px;
+
+}
+
+button {
+
+padding: 10px 20px;
+
+background-color: #e50914;
+
+border: none;
+
+border-radius: 4px;
+
+color: white;
+
+cursor: pointer;
+
+}
+
+button:hover {
+
+background-color: #f40612;
+
+}
+
+#movie-card {
+
+background: #1f1f1f;
+
+border-radius: 8px;
+
+padding: 20px;
+
+text-align: center;
+
+margin-top: 30px;
+
+}
+
+#poster {
+
+max-width: 100%;
+
+border-radius: 8px;
+
+}
+
+#watchlist {
+
+margin-top: 20px;
+
+list-style-type: none;
+
+padding-left: 0;
+
+}
+
+#watchlist li {
+
+background: #282828;
+
+margin: 5px 0;
+
+padding: 10px;
+
+border-radius: 4px;
+
+}
