@@ -121,11 +121,19 @@ if (movieQueue.length === 0) {
 title.innerText = "No more movies!";
 
 poster.classList.remove("fade-in");
-poster.src = movie.poster_path ? `${TMDB_IMAGE_BASE}${movie.poster_path}` : "";
-poster.onload = () => poster.classList.add("fade-in");
+
+const newPoster = movie.poster_path
+  ? `${TMDB_IMAGE_BASE}${movie.poster_path}`
+  : "fallback.jpg";
+
+poster.src = newPoster;
+
+// Ensure fade-in happens even if image is cached
+setTimeout(() => poster.classList.add("fade-in"), 30);
+
 poster.onerror = () => {
   poster.src = "fallback.jpg";
-  poster.classList.add("fade-in");
+  setTimeout(() => poster.classList.add("fade-in"), 30);
 };
 
 overview.innerText = "";
