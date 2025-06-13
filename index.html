@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatFlix Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatFlix</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <nav>
     <h1>WhatFlix</h1>
     <div class="nav-links">
-      <a href="#">Discover</a>
+      <a href="#">Dashboard</a>
       <a href="#">Watchlist</a>
       <a href="#">Friends</a>
-      <a href="#" id="signout-btn">Sign Out</a>
     </div>
   </nav>
 
@@ -24,6 +25,7 @@
       <input type="password" id="signup-password" placeholder="Password" required />
       <button type="submit">Sign Up</button>
     </form>
+
     <form id="signin-form">
       <h3>Sign In</h3>
       <input type="email" id="signin-email" placeholder="Email" required />
@@ -33,35 +35,39 @@
   </div>
 
   <div id="app-section" style="display:none;">
-    <span id="user-email"></span>
+    <button id="signout-btn">Sign Out</button>
+
     <div id="dashboard-container">
       <div id="movie-card">
         <img id="poster" src="" alt="Movie Poster" />
         <h2 id="title"></h2>
         <p id="overview"></p>
-        <select id="genre-select"></select>
         <button id="like">👍 Like</button>
         <button id="dislike">👎 Dislike</button>
       </div>
-      <ul id="watchlist"></ul>
+
+      <ul id="watchlist">
+        <h3>Your Watchlist</h3>
+      </ul>
     </div>
 
     <div class="tabs">
-      <button class="tab-button active">My Picks</button>
-      <button class="tab-button">Trending</button>
-      <button class="tab-button">For You</button>
+      <button class="tab-button active">🎯 Top Picks</button>
+      <button class="tab-button">🎥 New Releases</button>
+      <button class="tab-button">🔍 Surprise Me</button>
     </div>
 
     <div class="friend-activity">
       <h3>Friend Activity</h3>
-      <ul id="friend-activity-list">
-        <li>Emma liked "The Matrix"</li>
-        <li>Jake added "Breaking Bad" to watchlist</li>
-        <li>Lara just watched "Inception"</li>
+      <ul>
+        <li><strong>Sam</strong> liked "Interstellar"</li>
+        <li><strong>Alex</strong> added "Oppenheimer" to their watchlist</li>
+        <li><strong>Jamie</strong> is watching "Everything Everywhere All at Once"</li>
       </ul>
     </div>
   </div>
 
   <script type="module" src="script.js"></script>
 </body>
+
 </html>
